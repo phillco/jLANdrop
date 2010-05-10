@@ -96,10 +96,11 @@ public class Util
 	 */
 	public static String formatFileSize( double d )
 	{
-		String[] types = { "bytes", "KiB", "MiB", "GiB", "TiB", "PiB", "XiB", "ZiB", "YiB", "WTFB" };
+		String[] types = { "bytes", "KiB", "MiB", "GiB", "TiB", "PiB", "XiB", "ZiB", "YiB" };
+
 		int index = 0;
-		while ( d > Math.pow( 1024, index + 1 ) )
-			index++;
+		if ( d > 0 )
+			index = Math.min( types.length, (int) ( Math.log( d ) / Math.log( 1024 ) ) );
 		return new DecimalFormat( "0.0" ).format( d / Math.pow( 1024, index ) ) + " " + types[index];
 	}
 

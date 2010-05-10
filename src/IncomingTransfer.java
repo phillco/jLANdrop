@@ -106,7 +106,7 @@ public class IncomingTransfer extends Transfer
 
 			setStage( Stage.VERIFYING );
 			String theirMD5 = dataIn.readUTF();
-			String ourMD5 = Util.md5ToString( digest.digest() );
+			String ourMD5 = Util.digestToHexString( digest );
 			System.out.println( "Comparing file hashes...\nTheirs: " + theirMD5 + "\nOurs: " + ourMD5 );
 			if ( ourMD5.equals( theirMD5 ) )
 			{
