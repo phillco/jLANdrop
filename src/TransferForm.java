@@ -21,39 +21,37 @@ public class TransferForm extends JFrame
 		this.transfer = transfer;
 		setLayout( new BoxLayout( getContentPane(), BoxLayout.Y_AXIS ) );
 
-		JPanel labelPanel = new JPanel();
-		{
-			JPanel inner = new JPanel();
+		statusLabel = new JLabel();
+		statusLabel.setFont( statusLabel.getFont().deriveFont( Font.BOLD, 14 ) );
+		statusLabel.setAlignmentX( CENTER_ALIGNMENT );
+		detailLabel1 = new JLabel();
+		detailLabel2 = new JLabel();
 
-			inner.setLayout( new BoxLayout( inner, BoxLayout.Y_AXIS ) );
-			statusLabel = new JLabel();
-			statusLabel.setFont( statusLabel.getFont().deriveFont( Font.BOLD ) );
-			detailLabel1 = new JLabel();
-			detailLabel2 = new JLabel();
+		detailLabel1.setPreferredSize( new Dimension( 350, detailLabel1.getHeight() ) );
+		detailLabel1.setAlignmentX( CENTER_ALIGNMENT );
+		detailLabel2.setPreferredSize( new Dimension( 350, detailLabel1.getHeight() ) );
+		detailLabel2.setAlignmentX( CENTER_ALIGNMENT );
 
-			inner.add( statusLabel );
-			inner.add( Box.createRigidArea( new Dimension( 5, 5 ) ) );
-			inner.add( detailLabel1 );
-			inner.add( detailLabel2 );
-			labelPanel.add( inner );
-
-			// labelPanel.add( );
-			labelPanel.setPreferredSize( new Dimension( 400, 100 ) );
-		}
+		add( Box.createRigidArea( new Dimension( 5, 8 ) ) );
+		add( statusLabel );
 		add( Box.createRigidArea( new Dimension( 5, 5 ) ) );
-		add( labelPanel );
+		add( detailLabel1 );
+		add( Box.createRigidArea( new Dimension( 5, 3 ) ) );
+		add( detailLabel2 );
+		add( Box.createRigidArea( new Dimension( 5, 8 ) ) );
 
 		JPanel progressPanel = new JPanel();
 		{
 			progressBar = new JProgressBar();
 			progressPanel.add( progressBar );
-			progressBar.setPreferredSize( new Dimension( 200, 20 ) );
+			progressBar.setPreferredSize( new Dimension( 300, 25 ) );
 			progressPanel.setPreferredSize( new Dimension( 250, 65 ) );
 		}
 		add( progressPanel );
+		add( Box.createRigidArea( new Dimension( 5, 15 ) ) );
 
 		updateComponents();
-		setSize( 300, 130 );
+		setSize( 350, 145 );
 		setResizable( false );
 	}
 
