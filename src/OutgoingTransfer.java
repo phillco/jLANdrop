@@ -5,6 +5,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.security.DigestInputStream;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 import javax.swing.JOptionPane;
 
@@ -73,37 +76,32 @@ public class OutgoingTransfer extends Transfer
 			setName( "Sending " + file.getName() );
 			form.setVisible( true );
 			setStage( Stage.WAITING );
-			int len = (int) file.length();
 			outputStream.writeUTF( file.getName() );
-			outputStream.writeInt( len );
+			outputStream.writeInt( fileSize );
 			outputStream.flush();
 
 			if ( inputStream.readBoolean() )
 			{
 				setStage( Stage.TRANSFERRING );
 				startTime = System.currentTimeMillis();
-				byte[] data = new byte[len];
-				FileInputStream input = new FileInputStream( file );
-
+				
+				byte[] chunk;
+				FileInputStream fileIn = new FileInputStream( file );
 				for ( int i = 0; i < file.length(); i += Protocol.CHUNK_SIZE )
 				{
-					input.read( data, i, Math.min( Protocol.CHUNK_SIZE, len - i ) );
-					outputStream.write( data, i, Math.min( Protocol.CHUNK_SIZE, len - i ) );
-					bytesTransferred = i;
+					chunk = new byte[Protocol.CHUNK_SIZE];
+					int numBytes = Math.min( Protocol.CHUNK_SIZE, fileSize - i );
+
+					fileIn.read( chunk, 0, numBytes );
+					digest.update( chunk, 0, numBytes );
+					outputStream.write( chunk, 0, numBytes );
+					bytesTransferred += numBytes;
 					outputStream.flush();
-				/*	try
-					{
-						Thread.sleep( 0 );
-					}
-					catch ( InterruptedException e )
-					{
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}*/
 					form.updateComponents();
 				}
-
-				outputStream.writeUTF( Main.md5( data ) );
+				fileIn.close();
+				
+				outputStream.writeUTF( Main.md5ToString( digest.digest() ) );
 				outputStream.flush();
 
 				setStage( Stage.VERIFYING );

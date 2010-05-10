@@ -61,26 +61,34 @@ public class Main
 
 	public static String md5( byte[] data )
 	{
-		String res = "";
 		try
 		{
 			MessageDigest algorithm = MessageDigest.getInstance( "MD5" );
 			algorithm.reset();
 			algorithm.update( data );
 			byte[] md5 = algorithm.digest();
-			String tmp = "";
-			for ( int i = 0; i < md5.length; i++ )
-			{
-				tmp = ( Integer.toHexString( 0xFF & md5[i] ) );
-				if ( tmp.length() == 1 )
-					res += "0" + tmp;
-				else
-					res += tmp;
-			}
+
+			return md5ToString( md5 );
 		}
 		catch ( NoSuchAlgorithmException ex )
 		{
 			JOptionPane.showMessageDialog( null, "Couldn't initialize MD5", "Error", JOptionPane.ERROR_MESSAGE );
+			return "";
+		}
+	}
+
+	public static String md5ToString( byte[] md5 )
+	{
+		String res = "";
+
+		String tmp = "";
+		for ( int i = 0; i < md5.length; i++ )
+		{
+			tmp = ( Integer.toHexString( 0xFF & md5[i] ) );
+			if ( tmp.length() == 1 )
+				res += "0" + tmp;
+			else
+				res += tmp;
 		}
 		return res;
 	}

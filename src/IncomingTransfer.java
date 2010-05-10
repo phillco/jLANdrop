@@ -1,9 +1,15 @@
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.Socket;
+import java.security.DigestInputStream;
+import java.security.DigestOutputStream;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -83,25 +89,30 @@ public class IncomingTransfer extends Transfer
 			startTime = System.currentTimeMillis();
 			form.setVisible( true );
 
-			// Read in the file data.
-			byte[] data = new byte[fileSize];
+			byte[] chunk;
+
 			System.out.println( "Receiving..." );
 			FileOutputStream fileOutput = new FileOutputStream( fc.getSelectedFile() );
 			for ( int i = 0; i < fileSize; i += Protocol.CHUNK_SIZE )
 			{
-				dataIn.read( data, i, Math.min( Protocol.CHUNK_SIZE, fileSize - i ) );
-				fileOutput.write( data, i, Math.min( Protocol.CHUNK_SIZE, fileSize - i ) );
-				bytesTransferred = i;
+				chunk = new byte[Protocol.CHUNK_SIZE];
+				int numBytes = Math.min( Protocol.CHUNK_SIZE, fileSize - i );
+				dataIn.read( chunk, 0, numBytes );
+				if ( numBytes == -1 )
+					throw new IOException( "-1 bytes read" );
+				fileOutput.write( chunk, 0, numBytes );
+				digest.update( chunk, 0, numBytes );
+				bytesTransferred += numBytes;
 				if ( form != null )
 					form.updateComponents();
 			}
+			// digestOut.on( false );
 			fileOutput.close();
 
 			setStage( Stage.VERIFYING );
-			System.out.println( "Reading their MD5..." );
 			String theirMD5 = dataIn.readUTF();
-			String ourMD5 = Main.md5( data );
-			System.out.println( "Done MD5'ing ours..." );
+			String ourMD5 = Main.md5ToString( digest.digest() );
+			System.out.println( "Comparing file hashes...\nTheirs: " + theirMD5 + "\nOurs: " + ourMD5 );
 			if ( ourMD5.equals( theirMD5 ) )
 			{
 				// JOptionPane.showMessageDialog( null, "Done! " + fileName + " has been received and verified.\n\nChecksum: " + ourMD5 );
@@ -110,9 +121,10 @@ public class IncomingTransfer extends Transfer
 			}
 			else
 			{
+				dataOut.writeBoolean( false );
 				JOptionPane.showMessageDialog( null, "An error occured during the file transfer (checksum fail).\n\nReceived: " + Main.formatFileSize( fileSize ) + "\nLocal checksum: " + ourMD5 + "\nCorrect checksum: " + theirMD5, "Transfer error", JOptionPane.ERROR_MESSAGE );
 				setStage( Stage.FAILED );
-				dataOut.writeBoolean( false );
+
 			}
 
 		}
