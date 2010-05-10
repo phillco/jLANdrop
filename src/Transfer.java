@@ -1,6 +1,5 @@
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.io.IOException;
 import java.net.Socket;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -25,15 +24,17 @@ public abstract class Transfer extends Thread
 	protected MessageDigest verificationDigest = null;
 
 	protected String error = "";
-	
+
 	protected Socket socket;
-	
+
 	protected DataInputStream dataIn;
 
-	protected DataOutputStream dataOut;	
+	protected DataOutputStream dataOut;
 
-	public Transfer( )
-	{	
+	public Transfer( String name )
+	{
+		super( name );
+
 		try
 		{
 			verificationDigest = MessageDigest.getInstance( "MD5" );
@@ -54,7 +55,7 @@ public abstract class Transfer extends Thread
 			return Util.formatFileSize( bytesTransferred ) + " of " + Util.formatFileSize( fileSize ) + " at " + Util.formatFileSize( getTransferSpeed() * 1000 ) + "/s";
 		else if ( stage == Stage.FINISHED )
 			return "Verified with MD5";
-		else if ( stage == Stage.FAILED && error.length() > 0 )
+		else if ( ( stage == Stage.FAILED ) && ( error.length() > 0 ) )
 			return error;
 		else
 			return " ";
@@ -95,6 +96,8 @@ public abstract class Transfer extends Thread
 	public void setStage( Stage stage )
 	{
 		this.stage = stage;
+
+		System.out.println( "\"" + getName() + "\" is now in the " + stage + " stage." );
 
 		if ( form != null )
 			form.updateComponents();

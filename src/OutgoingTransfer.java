@@ -20,6 +20,7 @@ public class OutgoingTransfer extends Transfer
 	 */
 	public OutgoingTransfer( File file, String serverAddress, int serverPort )
 	{
+		super( "Sending " + file.getName() );
 		this.file = file;
 		fileSize = (int) file.length();
 
@@ -77,9 +78,8 @@ public class OutgoingTransfer extends Transfer
 	private void startTransfer() throws IOException
 	{
 		setStage( Stage.WAITING );
-		
-		// Update the form.		
-		setName( "Sending " + file.getName() );
+
+		// Update the form.
 		form.setVisible( true );
 
 		// Send the user the file's attributes.
@@ -104,7 +104,7 @@ public class OutgoingTransfer extends Transfer
 		// Iterate through the file in chunk-sized increments.
 		for ( int i = 0; i < file.length(); i += Protocol.CHUNK_SIZE )
 		{
-			// Calculate the number of bytes we're about to transfer. (CHUNK_SIZE or less, if we're at the end of the file)
+			// Calculate the number of bytes we're about to send. (CHUNK_SIZE or less, if we're at the end of the file)
 			int numBytes = Math.min( Protocol.CHUNK_SIZE, fileSize - i );
 
 			// Create the chunk.

@@ -51,7 +51,7 @@ public class Util
 				res.append( temp ).append( " minute" ).append( temp > 1 ? "s" : "" );
 			}
 
-			if ( !res.toString().equals( "" ) && duration >= SECOND )
+			if ( !res.toString().equals( "" ) && ( duration >= SECOND ) )
 				res.append( " and " );
 
 			temp = duration / SECOND;

@@ -63,7 +63,7 @@ public class TransferForm extends JFrame
 	{
 		setTitle( transfer.getName() );
 		progressBar.setValue( transfer.getProgress() );
-		if ( transfer.getStage() != Transfer.Stage.TRANSFERRING || System.currentTimeMillis() - lastUpdateTime > 100 )
+		if ( ( transfer.getStage() != Transfer.Stage.TRANSFERRING ) || ( System.currentTimeMillis() - lastUpdateTime > 100 ) )
 		{
 			statusLabel.setText( transfer.toString() );
 			detailLabel1.setText( transfer.getDetailLine1() );

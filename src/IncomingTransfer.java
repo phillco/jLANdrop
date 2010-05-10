@@ -15,8 +15,13 @@ public class IncomingTransfer extends Transfer
 
 	private FileOutputStream fileOut;
 
+	/**
+	 * Receives the transfer from the given socket.
+	 */
 	public IncomingTransfer( Socket socket ) throws IOException
 	{
+		super( "Receiving from " + socket.getInetAddress() );
+
 		this.socket = socket;
 
 		dataIn = new DataInputStream( socket.getInputStream() );
@@ -29,28 +34,25 @@ public class IncomingTransfer extends Transfer
 	{
 		try
 		{
-			fileName = dataIn.readUTF();
-			fileSize = dataIn.readInt();
+			// Receive the file's details.
+			startTransfer();
 
-			setName( "Receiving " + fileName );
-			System.out.println( socket.getInetAddress() + " would like to send us " + fileName + " (" + Util.formatFileSize( fileSize ) + ")" );
-
+			// Ask the user if, and where to, store the file.
 			if ( getConfirmation() )
 			{
 				dataOut.writeBoolean( true );
 				dataOut.flush();
+
+				transferFile();
+				verifyFile();
 			}
 			else
 			{
 				dataOut.writeBoolean( false );
 				setStage( Stage.REJECTED );
-				socket.close();
-				return;
 			}
 
-			transferFile();
-			verifyFile();
-
+			socket.close();
 		}
 		catch ( IOException e )
 		{
@@ -58,24 +60,16 @@ public class IncomingTransfer extends Transfer
 		}
 	}
 
-	@Override
-	public String toString()
+	/**
+	 * Reads in the file's attributes from the sender, so we can start the transfer.
+	 */
+	private void startTransfer() throws IOException
 	{
-		switch ( getStage() )
-		{
-			case WAITING:
-				return "Waiting for approval...";
-			case TRANSFERRING:
-				return "Receiving... (" + getProgress() + "%)";
-			case VERIFYING:
-				return "Verifying data...";
-			case FAILED:
-				return "Transfer failed!";
-			case FINISHED:
-				return "Transfer completed successfully.";
-		}
+		fileName = dataIn.readUTF();
+		fileSize = dataIn.readInt();
 
-		return "Unknown";
+		setName( "Receiving " + fileName );
+		System.out.println( socket.getInetAddress() + " would like to send us " + fileName + " (" + Util.formatFileSize( fileSize ) + ")" );
 	}
 
 	/**
@@ -106,51 +100,87 @@ public class IncomingTransfer extends Transfer
 			return false;
 	}
 
+	/**
+	 * Receives the file's data, chunk-by-chunk.
+	 */
 	private void transferFile() throws IOException
 	{
 		setStage( Stage.TRANSFERRING );
+
+		// Start the clock (for transfer speed calculation).
 		startTime = System.currentTimeMillis();
 		form.setVisible( true );
 
-		byte[] chunk;
-
-		System.out.println( "Receiving..." );
+		// Iterate through the file in chunk-sized increments.
 		for ( int i = 0; i < fileSize; i += Protocol.CHUNK_SIZE )
 		{
-			chunk = new byte[Protocol.CHUNK_SIZE];
+			// Calculate the number of bytes we're about to receive. (CHUNK_SIZE or less, if we're at the end of the file)
 			int numBytes = Math.min( Protocol.CHUNK_SIZE, fileSize - i );
+
+			// Create the chunk.
+			byte[] chunk = new byte[numBytes];
+
+			// Read in the chunk, add it to our MD5 digest, and send it to the file.
 			dataIn.read( chunk, 0, numBytes );
-			if ( numBytes == -1 )
-				throw new IOException( "-1 bytes read" );
-			fileOut.write( chunk, 0, numBytes );
 			verificationDigest.update( chunk, 0, numBytes );
+			fileOut.write( chunk, 0, numBytes );
+
+			// Update the form.
 			bytesTransferred += numBytes;
-			if ( form != null )
-				form.updateComponents();
+			form.updateComponents();
 		}
+
+		// ...and we're done.
 		fileOut.close();
 	}
 
+	/**
+	 * Verifies the data we've just received.
+	 */
 	private void verifyFile() throws IOException
 	{
 		setStage( Stage.VERIFYING );
+
+		// Read in the sender's MD5 checksum; calculate ours.
 		String theirMD5 = dataIn.readUTF();
 		String ourMD5 = Util.digestToHexString( verificationDigest );
-		System.out.println( "Comparing file hashes...\nTheirs: " + theirMD5 + "\nOurs: " + ourMD5 );
+		System.out.println( "Comparing file hashes...\nSender's: " + theirMD5 + "\nOurs: " + ourMD5 );
+
+		// Did they match?
 		if ( ourMD5.equals( theirMD5 ) )
 		{
-			// JOptionPane.showMessageDialog( null, "Done! " + fileName + " has been received and verified.\n\nChecksum: " + ourMD5 );
-			setStage( Stage.FINISHED );
+			// Success! Transfer finished.
 			dataOut.writeBoolean( true );
+			setStage( Stage.FINISHED );
 		}
 		else
 		{
+			// Failure!
 			dataOut.writeBoolean( false );
-			JOptionPane.showMessageDialog( null, "An error occured during the file transfer (checksum fail).\n\nReceived: " + Util.formatFileSize( fileSize ) + "\nLocal checksum: " + ourMD5 + "\nCorrect checksum: " + theirMD5, "Transfer error", JOptionPane.ERROR_MESSAGE );
-			setStage( Stage.FAILED );
-
+			transferFailed( "File verification failed." );
 		}
-
 	}
 
+	/**
+	 * Returns the status of this transfer.
+	 */
+	@Override
+	public String toString()
+	{
+		switch ( getStage() )
+		{
+			case WAITING:
+				return "Waiting for approval...";
+			case TRANSFERRING:
+				return "Receiving... (" + getProgress() + "%)";
+			case VERIFYING:
+				return "Verifying data...";
+			case FAILED:
+				return "Transfer failed!";
+			case FINISHED:
+				return "Transfer completed successfully.";
+		}
+
+		return "Unknown";
+	}
 }
