@@ -36,12 +36,28 @@ public abstract class Transfer extends Thread
 		form = new TransferForm( this );
 	}
 
-	public String getDetails()
+	public String getDetailLine1()
 	{
 		if ( stage == Stage.TRANSFERRING )
-			return Main.formatFileSize( bytesTransferred ) + " of " + Main.formatFileSize( fileSize ) + " at " + Main.formatFileSize( getTransferSpeed() ) + "/s";
+			return Util.formatFileSize( bytesTransferred ) + " of " + Util.formatFileSize( fileSize ) + " at " + Util.formatFileSize( getTransferSpeed() * 100 ) + "/s";
 		else if ( stage == Stage.FINISHED )
 			return "Verified with MD5";
+		else
+			return " ";
+	}
+
+	public String getDetailLine2()
+	{
+		if ( stage == Stage.TRANSFERRING )
+		{
+			if ( getTransferSpeed() == 0 )
+				return "";
+			else
+			{
+				int milliSecondsLeft = (int) ( ( fileSize - bytesTransferred ) / getTransferSpeed() );
+				return "about " + Util.millisToLongDHMS( milliSecondsLeft ) + " left";
+			}
+		}
 		else
 			return " ";
 	}
@@ -49,9 +65,9 @@ public abstract class Transfer extends Thread
 	public double getTransferSpeed()
 	{
 		if ( System.currentTimeMillis() == startTime )
-			return 15;
+			return 0;
 		else
-			return bytesTransferred * 100.0 / ( System.currentTimeMillis() - startTime );
+			return bytesTransferred / ( System.currentTimeMillis() - startTime );
 	}
 
 	public int getProgress()

@@ -1,9 +1,5 @@
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.text.DecimalFormat;
 import java.util.LinkedList;
 
-import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
@@ -48,48 +44,5 @@ public class Main
 	public static Listener getListener()
 	{
 		return listener;
-	}
-
-	public static String formatFileSize( double d )
-	{
-		String[] types = { "bytes", "KiB", "MiB", "GiB", "TiB", "PiB", "XiB", "ZiB", "YiB", "WTFB" };
-		int index = 0;
-		while ( d > Math.pow( 1024, index + 1 ) )
-			index++;
-		return new DecimalFormat( "0.0" ).format( d / Math.pow( 1024, index ) ) + " " + types[index];
-	}
-
-	public static String md5( byte[] data )
-	{
-		try
-		{
-			MessageDigest algorithm = MessageDigest.getInstance( "MD5" );
-			algorithm.reset();
-			algorithm.update( data );
-			byte[] md5 = algorithm.digest();
-
-			return md5ToString( md5 );
-		}
-		catch ( NoSuchAlgorithmException ex )
-		{
-			JOptionPane.showMessageDialog( null, "Couldn't initialize MD5", "Error", JOptionPane.ERROR_MESSAGE );
-			return "";
-		}
-	}
-
-	public static String md5ToString( byte[] md5 )
-	{
-		String res = "";
-
-		String tmp = "";
-		for ( byte element : md5 )
-		{
-			tmp = ( Integer.toHexString( 0xFF & element ) );
-			if ( tmp.length() == 1 )
-				res += "0" + tmp;
-			else
-				res += tmp;
-		}
-		return res;
 	}
 }

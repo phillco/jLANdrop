@@ -12,7 +12,7 @@ public class TransferForm extends JFrame
 {
 	private Transfer transfer;
 
-	private JLabel statusLabel, detailLabel;
+	private JLabel statusLabel, detailLabel1, detailLabel2;
 
 	private JProgressBar progressBar;
 
@@ -28,10 +28,13 @@ public class TransferForm extends JFrame
 			inner.setLayout( new BoxLayout( inner, BoxLayout.Y_AXIS ) );
 			statusLabel = new JLabel();
 			statusLabel.setFont( statusLabel.getFont().deriveFont( Font.BOLD ) );
-			detailLabel = new JLabel();
+			detailLabel1 = new JLabel();
+			detailLabel2 = new JLabel();
+
 			inner.add( statusLabel );
 			inner.add( Box.createRigidArea( new Dimension( 5, 5 ) ) );
-			inner.add( detailLabel );
+			inner.add( detailLabel1 );
+			inner.add( detailLabel2 );
 			labelPanel.add( inner );
 
 			// labelPanel.add( );
@@ -58,7 +61,8 @@ public class TransferForm extends JFrame
 	{
 		setTitle( transfer.getName() );
 		statusLabel.setText( transfer.toString() );
-		detailLabel.setText( transfer.getDetails() );
+		detailLabel1.setText( transfer.getDetailLine1() );
+		detailLabel2.setText( transfer.getDetailLine2() );
 		progressBar.setValue( transfer.getProgress() );
 	}
 

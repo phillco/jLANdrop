@@ -106,7 +106,7 @@ public class IncomingTransfer extends Transfer
 
 			setStage( Stage.VERIFYING );
 			String theirMD5 = dataIn.readUTF();
-			String ourMD5 = Main.md5ToString( digest.digest() );
+			String ourMD5 = Util.md5ToString( digest.digest() );
 			System.out.println( "Comparing file hashes...\nTheirs: " + theirMD5 + "\nOurs: " + ourMD5 );
 			if ( ourMD5.equals( theirMD5 ) )
 			{
@@ -117,7 +117,7 @@ public class IncomingTransfer extends Transfer
 			else
 			{
 				dataOut.writeBoolean( false );
-				JOptionPane.showMessageDialog( null, "An error occured during the file transfer (checksum fail).\n\nReceived: " + Main.formatFileSize( fileSize ) + "\nLocal checksum: " + ourMD5 + "\nCorrect checksum: " + theirMD5, "Transfer error", JOptionPane.ERROR_MESSAGE );
+				JOptionPane.showMessageDialog( null, "An error occured during the file transfer (checksum fail).\n\nReceived: " + Util.formatFileSize( fileSize ) + "\nLocal checksum: " + ourMD5 + "\nCorrect checksum: " + theirMD5, "Transfer error", JOptionPane.ERROR_MESSAGE );
 				setStage( Stage.FAILED );
 
 			}
