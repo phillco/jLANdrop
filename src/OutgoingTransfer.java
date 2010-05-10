@@ -10,23 +10,25 @@ import javax.swing.JOptionPane;
 
 public class OutgoingTransfer extends Transfer
 {
-	Socket localSocket;
-	DataInputStream inputStream;
-	DataOutputStream outputStream;
-	File file;
+	/**
+	 * The file we're transferring.
+	 */
+	private File file;
 
+	/**
+	 * Connects to the given peer to transfer <code>file</code>.
+	 */
 	public OutgoingTransfer( File file, String serverAddress, int serverPort )
 	{
 		this.file = file;
 		fileSize = (int) file.length();
 
-		// Connect to the server!
 		try
 		{
 			// Hook up the socket.
-			localSocket = new Socket( serverAddress, serverPort );
-			inputStream = new DataInputStream( localSocket.getInputStream() );
-			outputStream = new DataOutputStream( localSocket.getOutputStream() );
+			socket = new Socket( serverAddress, serverPort );
+			dataIn = new DataInputStream( socket.getInputStream() );
+			dataOut = new DataOutputStream( socket.getOutputStream() );
 		}
 		catch ( final UnknownHostException e )
 		{
@@ -49,12 +51,13 @@ public class OutgoingTransfer extends Transfer
 	{
 		try
 		{
-			setName( "Sending " + file.getName() );
-			form.setVisible( true );
+			// Send the receiver info about the file.
 			startTransfer();
 
-			if ( inputStream.readBoolean() )
+			// See if they accept the transfer.
+			if ( dataIn.readBoolean() )
 			{
+				// They did!
 				transferFile();
 				verifyFile();
 			}
@@ -68,49 +71,81 @@ public class OutgoingTransfer extends Transfer
 		}
 	}
 
+	/**
+	 * Starts the transfer by sending the receiver the file's information.
+	 */
 	private void startTransfer() throws IOException
 	{
 		setStage( Stage.WAITING );
-		outputStream.writeUTF( file.getName() );
-		outputStream.writeInt( fileSize );
-		outputStream.flush();
+		
+		// Update the form.		
+		setName( "Sending " + file.getName() );
+		form.setVisible( true );
+
+		// Send the user the file's attributes.
+		dataOut.writeUTF( file.getName() );
+		dataOut.writeInt( fileSize );
+		dataOut.flush();
 	}
 
+	/**
+	 * Transfers the file, chunk-by-chunk.
+	 */
 	private void transferFile() throws IOException
 	{
 		setStage( Stage.TRANSFERRING );
+
+		// Start the clock (for transfer speed calculation).
 		startTime = System.currentTimeMillis();
 
-		byte[] chunk;
+		// Open the file for reading...
 		FileInputStream fileIn = new FileInputStream( file );
+
+		// Iterate through the file in chunk-sized increments.
 		for ( int i = 0; i < file.length(); i += Protocol.CHUNK_SIZE )
 		{
-			chunk = new byte[Protocol.CHUNK_SIZE];
+			// Calculate the number of bytes we're about to transfer. (CHUNK_SIZE or less, if we're at the end of the file)
 			int numBytes = Math.min( Protocol.CHUNK_SIZE, fileSize - i );
 
+			// Create the chunk.
+			byte[] chunk = new byte[numBytes];
+
+			// Read in the chunk, add it to our MD5 digest, and send it to the receiver.
 			fileIn.read( chunk, 0, numBytes );
-			digest.update( chunk, 0, numBytes );
-			outputStream.write( chunk, 0, numBytes );
+			verificationDigest.update( chunk, 0, numBytes );
+			dataOut.write( chunk, 0, numBytes );
+			dataOut.flush();
+
+			// Update the form.
 			bytesTransferred += numBytes;
-			outputStream.flush();
 			form.updateComponents();
 		}
-		fileIn.close();
 
-		outputStream.writeUTF( Util.digestToHexString( digest ) );
-		outputStream.flush();
+		// ...and we're done.
+		fileIn.close();
 	}
 
+	/**
+	 * Handles the verification of the file with the receiver.
+	 */
 	private void verifyFile() throws IOException
 	{
 		setStage( Stage.VERIFYING );
 
-		if ( inputStream.readBoolean() )
+		// Send the receiver the correct MD5 of our file (the digest is updated in transferFile).
+		dataOut.writeUTF( Util.digestToHexString( verificationDigest ) );
+		dataOut.flush();
+
+		// Wait for the receiver to verify their file. Read in whether it succeeded.
+		if ( dataIn.readBoolean() )
 			setStage( Stage.FINISHED );
 		else
-			transferFailed( "File verification failed." );
+			transferFailed( "Receiver's file verification failed." );
 	}
 
+	/**
+	 * Returns the status of this transfer.
+	 */
 	@Override
 	public String toString()
 	{
@@ -125,9 +160,9 @@ public class OutgoingTransfer extends Transfer
 			case FAILED:
 				return "Transfer failed!";
 			case FINISHED:
-				return "Transfer completed successfully.";
+				return "Transfer completed successfully!";
+			default:
+				return "Unknown";
 		}
-
-		return "Unknown";
 	}
 }

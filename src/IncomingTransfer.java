@@ -11,13 +11,7 @@ import javax.swing.JOptionPane;
 
 public class IncomingTransfer extends Transfer
 {
-	private Socket socket;
-
 	private String fileName;
-
-	private DataInputStream dataIn;
-
-	private DataOutputStream dataOut;
 
 	private FileOutputStream fileOut;
 
@@ -27,7 +21,6 @@ public class IncomingTransfer extends Transfer
 
 		dataIn = new DataInputStream( socket.getInputStream() );
 		dataOut = new DataOutputStream( socket.getOutputStream() );
-
 		start();
 	}
 
@@ -40,7 +33,7 @@ public class IncomingTransfer extends Transfer
 			fileSize = dataIn.readInt();
 
 			setName( "Receiving " + fileName );
-			System.out.println( "New incoming transfer from " + socket.getInetAddress() + "." );
+			System.out.println( socket.getInetAddress() + " would like to send us " + fileName + " (" + Util.formatFileSize( fileSize ) + ")" );
 
 			if ( getConfirmation() )
 			{
@@ -85,21 +78,32 @@ public class IncomingTransfer extends Transfer
 		return "Unknown";
 	}
 
+	/**
+	 * Asks the user if they want to accept the transfer, and if so, where.
+	 * Returns whether the transfer should proceed.
+	 */
 	private boolean getConfirmation() throws FileNotFoundException
 	{
+		// Asks the user if they want to accept the transfer.
 		if ( JOptionPane.showConfirmDialog( null, "Would you like to receive \"" + fileName + "\" from " + socket.getInetAddress().toString().substring( 1 ) + "?\nSize: " + Util.formatFileSize( fileSize ) + ".", "Incoming transfer", JOptionPane.YES_NO_OPTION ) != JOptionPane.YES_OPTION )
 			return false;
 
-		// Get the save location.
-		final JFileChooser fc = new JFileChooser();
+		// Make a JFileChooser to ask for the save location.
+		JFileChooser fileChooser = new JFileChooser();
+
+		// Append "-new" to the filename, so we don't ever override the originals by mistake.
 		String newDefaultFilename = fileName.substring( 0, fileName.length() - 4 ) + "-new" + fileName.substring( fileName.length() - 4 );
-		fc.setSelectedFile( new File( newDefaultFilename ) );
+		fileChooser.setSelectedFile( new File( newDefaultFilename ) );
 
-		if ( fc.showSaveDialog( null ) != JFileChooser.APPROVE_OPTION )
+		// Show the dialog.
+		if ( fileChooser.showSaveDialog( null ) == JFileChooser.APPROVE_OPTION )
+		{
+			// Good! Create the output stream.
+			fileOut = new FileOutputStream( fileChooser.getSelectedFile() );
+			return true;
+		}
+		else
 			return false;
-
-		fileOut = new FileOutputStream( fc.getSelectedFile() );
-		return true;
 	}
 
 	private void transferFile() throws IOException
@@ -119,7 +123,7 @@ public class IncomingTransfer extends Transfer
 			if ( numBytes == -1 )
 				throw new IOException( "-1 bytes read" );
 			fileOut.write( chunk, 0, numBytes );
-			digest.update( chunk, 0, numBytes );
+			verificationDigest.update( chunk, 0, numBytes );
 			bytesTransferred += numBytes;
 			if ( form != null )
 				form.updateComponents();
@@ -131,7 +135,7 @@ public class IncomingTransfer extends Transfer
 	{
 		setStage( Stage.VERIFYING );
 		String theirMD5 = dataIn.readUTF();
-		String ourMD5 = Util.digestToHexString( digest );
+		String ourMD5 = Util.digestToHexString( verificationDigest );
 		System.out.println( "Comparing file hashes...\nTheirs: " + theirMD5 + "\nOurs: " + ourMD5 );
 		if ( ourMD5.equals( theirMD5 ) )
 		{

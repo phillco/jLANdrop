@@ -1,3 +1,7 @@
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.Socket;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -18,16 +22,22 @@ public abstract class Transfer extends Thread
 
 	protected long startTime;
 
-	protected MessageDigest digest = null;
+	protected MessageDigest verificationDigest = null;
 
 	protected String error = "";
+	
+	protected Socket socket;
+	
+	protected DataInputStream dataIn;
 
-	public Transfer()
-	{
+	protected DataOutputStream dataOut;	
+
+	public Transfer( )
+	{	
 		try
 		{
-			digest = MessageDigest.getInstance( "MD5" );
-			digest.reset();
+			verificationDigest = MessageDigest.getInstance( "MD5" );
+			verificationDigest.reset();
 		}
 		catch ( NoSuchAlgorithmException e )
 		{
