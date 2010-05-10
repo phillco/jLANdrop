@@ -126,7 +126,7 @@ public class IncomingTransfer extends Transfer
 		catch ( IOException e )
 		{
 			setStage( Stage.FAILED );
-			System.out.println( "Transfer failed." );
+			System.out.println( "Transfer failed! (IOException)" );
 		}
 
 	}
