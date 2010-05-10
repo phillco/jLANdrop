@@ -39,7 +39,7 @@ public abstract class Transfer extends Thread
 	public String getDetailLine1()
 	{
 		if ( stage == Stage.TRANSFERRING )
-			return Util.formatFileSize( bytesTransferred ) + " of " + Util.formatFileSize( fileSize ) + " at " + Util.formatFileSize( getTransferSpeed() * 100 ) + "/s";
+			return Util.formatFileSize( bytesTransferred ) + " of " + Util.formatFileSize( fileSize ) + " at " + Util.formatFileSize( getTransferSpeed() * 1000 ) + "/s";
 		else if ( stage == Stage.FINISHED )
 			return "Verified with MD5";
 		else
