@@ -100,7 +100,7 @@ public class Util
 
 		int index = 0;
 		if ( d > 0 )
-			index = Math.min( types.length, (int) ( Math.log( d ) / Math.log( 1024 ) ) );
+			index = Math.min( types.length - 1, (int) ( Math.log( d ) / Math.log( 1024 ) ) );
 		return new DecimalFormat( "0.0" ).format( d / Math.pow( 1024, index ) ) + " " + types[index];
 	}
 
