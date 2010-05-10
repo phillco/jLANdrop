@@ -80,6 +80,7 @@ public class IncomingTransfer extends Transfer
 			}*/
 
 			setStage( Stage.TRANSFERRING );
+			startTime = System.currentTimeMillis();
 			form.setVisible( true );
 
 			// Read in the file data.

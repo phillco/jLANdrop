@@ -81,6 +81,7 @@ public class OutgoingTransfer extends Transfer
 			if ( inputStream.readBoolean() )
 			{
 				setStage( Stage.TRANSFERRING );
+				startTime = System.currentTimeMillis();
 				byte[] data = new byte[len];
 				FileInputStream input = new FileInputStream( file );
 

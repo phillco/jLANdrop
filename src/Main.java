@@ -50,13 +50,13 @@ public class Main
 		return listener;
 	}
 
-	public static String formatFileSize( long numBytes )
+	public static String formatFileSize( double d )
 	{
 		String[] types = { "bytes", "KiB", "MiB", "GiB", "TiB", "PiB", "XiB", "ZiB", "YiB", "WTFB" };
 		int index = 0;
-		while ( numBytes > Math.pow( 1024, index + 1 ) )
+		while ( d > Math.pow( 1024, index + 1 ) )
 			index++;
-		return new DecimalFormat( "0.0" ).format( numBytes / Math.pow( 1024, index ) ) + " " + types[index];
+		return new DecimalFormat( "0.0" ).format( d / Math.pow( 1024, index ) ) + " " + types[index];
 	}
 
 	public static String md5( byte[] data )
