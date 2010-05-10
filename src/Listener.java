@@ -2,7 +2,6 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.UnknownHostException;
-import java.util.LinkedList;
 
 import javax.swing.JOptionPane;
 
@@ -35,7 +34,7 @@ public class Listener
 		// Start listening for connections.
 		try
 		{
-			this.port = Protocol.DEFAULT_PORT;
+			port = Protocol.DEFAULT_PORT;
 			listeningSocket = new ServerSocket( port );
 		}
 		catch ( final IOException e )
@@ -51,7 +50,7 @@ public class Listener
 		acceptThread.start();
 		Main.getMainFrame().updateLabels();
 	}
-	
+
 	@SuppressWarnings( "deprecation" )
 	public void disconnect()
 	{
@@ -94,7 +93,7 @@ public class Listener
 				{
 					// Wait for a new client.
 					IncomingTransfer transfer = new IncomingTransfer( listeningSocket.accept() );
-					Main.incomingTransfers.add( transfer  ); // Stop here until the client connects.
+					Main.incomingTransfers.add( transfer ); // Stop here until the client connects.
 				}
 				catch ( final IOException e )
 				{

@@ -1,15 +1,9 @@
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.Socket;
-import java.security.DigestInputStream;
-import java.security.DigestOutputStream;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -54,6 +48,7 @@ public class IncomingTransfer extends Transfer
 		return "Unknown";
 	}
 
+	@Override
 	public void run()
 	{
 		try

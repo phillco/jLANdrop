@@ -17,9 +17,9 @@ public abstract class Transfer extends Thread
 	protected int bytesTransferred = 0;
 
 	protected long startTime;
-	
+
 	protected MessageDigest digest = null;
-	
+
 	public Transfer()
 	{
 		try
@@ -31,7 +31,7 @@ public abstract class Transfer extends Thread
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}		
+		}
 
 		form = new TransferForm( this );
 	}

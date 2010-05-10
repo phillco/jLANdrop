@@ -82,9 +82,9 @@ public class Main
 		String res = "";
 
 		String tmp = "";
-		for ( int i = 0; i < md5.length; i++ )
+		for ( byte element : md5 )
 		{
-			tmp = ( Integer.toHexString( 0xFF & md5[i] ) );
+			tmp = ( Integer.toHexString( 0xFF & element ) );
 			if ( tmp.length() == 1 )
 				res += "0" + tmp;
 			else

@@ -5,9 +5,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.security.DigestInputStream;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
 import javax.swing.JOptionPane;
 
@@ -21,7 +18,7 @@ public class OutgoingTransfer extends Transfer
 	public OutgoingTransfer( File file, String serverAddress, int serverPort )
 	{
 		this.file = file;
-		this.fileSize = (int) file.length();
+		fileSize = (int) file.length();
 
 		// Connect to the server!
 		try
@@ -84,7 +81,7 @@ public class OutgoingTransfer extends Transfer
 			{
 				setStage( Stage.TRANSFERRING );
 				startTime = System.currentTimeMillis();
-				
+
 				byte[] chunk;
 				FileInputStream fileIn = new FileInputStream( file );
 				for ( int i = 0; i < file.length(); i += Protocol.CHUNK_SIZE )
@@ -100,7 +97,7 @@ public class OutgoingTransfer extends Transfer
 					form.updateComponents();
 				}
 				fileIn.close();
-				
+
 				outputStream.writeUTF( Main.md5ToString( digest.digest() ) );
 				outputStream.flush();
 
