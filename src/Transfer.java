@@ -20,6 +20,8 @@ public abstract class Transfer extends Thread
 
 	protected MessageDigest digest = null;
 
+	protected String error = "";
+
 	public Transfer()
 	{
 		try
@@ -42,6 +44,8 @@ public abstract class Transfer extends Thread
 			return Util.formatFileSize( bytesTransferred ) + " of " + Util.formatFileSize( fileSize ) + " at " + Util.formatFileSize( getTransferSpeed() * 1000 ) + "/s";
 		else if ( stage == Stage.FINISHED )
 			return "Verified with MD5";
+		else if ( stage == Stage.FAILED && error.length() > 0 )
+			return error;
 		else
 			return " ";
 	}
@@ -89,6 +93,13 @@ public abstract class Transfer extends Thread
 	public Stage getStage()
 	{
 		return stage;
+	}
+
+	protected void transferFailed( String error )
+	{
+		this.error = error;
+		setStage( Stage.FAILED );
+
 	}
 
 }
