@@ -1,5 +1,6 @@
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.SystemColor;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -16,6 +17,8 @@ public class TransferForm extends JFrame
 
 	private JProgressBar progressBar;
 
+	private long lastUpdateTime = 0;
+
 	public TransferForm( Transfer transfer )
 	{
 		this.transfer = transfer;
@@ -29,8 +32,9 @@ public class TransferForm extends JFrame
 
 		detailLabel1.setPreferredSize( new Dimension( 350, detailLabel1.getHeight() ) );
 		detailLabel1.setAlignmentX( CENTER_ALIGNMENT );
-		detailLabel2.setPreferredSize( new Dimension( 350, detailLabel1.getHeight() ) );
+		detailLabel2.setPreferredSize( new Dimension( 350, detailLabel2.getHeight() ) );
 		detailLabel2.setAlignmentX( CENTER_ALIGNMENT );
+		detailLabel2.setForeground( SystemColor.controlDkShadow );
 
 		add( Box.createRigidArea( new Dimension( 5, 8 ) ) );
 		add( statusLabel );
@@ -58,10 +62,14 @@ public class TransferForm extends JFrame
 	public void updateComponents()
 	{
 		setTitle( transfer.getName() );
-		statusLabel.setText( transfer.toString() );
-		detailLabel1.setText( transfer.getDetailLine1() );
-		detailLabel2.setText( transfer.getDetailLine2() );
 		progressBar.setValue( transfer.getProgress() );
+		if ( transfer.getStage() != Transfer.Stage.TRANSFERRING || System.currentTimeMillis() - lastUpdateTime > 100 )
+		{
+			statusLabel.setText( transfer.toString() );
+			detailLabel1.setText( transfer.getDetailLine1() );
+			detailLabel2.setText( transfer.getDetailLine2() );
+			lastUpdateTime = System.currentTimeMillis();
+		}
 	}
 
 }
