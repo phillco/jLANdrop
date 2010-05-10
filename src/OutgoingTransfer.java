@@ -98,7 +98,7 @@ public class OutgoingTransfer extends Transfer
 				}
 				fileIn.close();
 
-				outputStream.writeUTF( Util.md5ToString( digest.digest() ) );
+				outputStream.writeUTF( Util.digestToHexString( digest ) );
 				outputStream.flush();
 
 				setStage( Stage.VERIFYING );

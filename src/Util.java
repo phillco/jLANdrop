@@ -1,3 +1,4 @@
+import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
@@ -51,49 +52,28 @@ public class Util
 			}
 
 			if ( !res.toString().equals( "" ) && duration >= SECOND )
-			{
 				res.append( " and " );
-			}
 
 			temp = duration / SECOND;
 			if ( temp > 0 )
-			{
 				res.append( temp ).append( " second" ).append( temp > 1 ? "s" : "" );
-			}
 			return res.toString();
 		}
 		else
-		{
 			return "0 seconds";
-		}
 	}
 
-	public static String md5ToString( byte[] md5 )
-	{
-		String res = "";
-
-		String tmp = "";
-		for ( byte element : md5 )
-		{
-			tmp = ( Integer.toHexString( 0xFF & element ) );
-			if ( tmp.length() == 1 )
-				res += "0" + tmp;
-			else
-				res += tmp;
-		}
-		return res;
-	}
-
-	public static String md5( byte[] data )
+	/**
+	 * Returns the MD5 digest of the given data, in the familiar hex-string format.
+	 * Example: 4a20374bf419ed3c7b1fa3bc18e7922a
+	 */
+	public static String md5( byte[] inputData )
 	{
 		try
 		{
 			MessageDigest algorithm = MessageDigest.getInstance( "MD5" );
-			algorithm.reset();
-			algorithm.update( data );
-			byte[] md5 = algorithm.digest();
-
-			return md5ToString( md5 );
+			algorithm.update( inputData );
+			return digestToHexString( algorithm );
 		}
 		catch ( NoSuchAlgorithmException ex )
 		{
@@ -102,6 +82,18 @@ public class Util
 		}
 	}
 
+	/**
+	 * Converts an MD5 digest to a human-readable hex string (e.g. 4a20374bf419ed3c7b1fa3bc18e7922a).
+	 */
+	public static String digestToHexString( MessageDigest digest )
+	{
+		BigInteger number = new BigInteger( 1, digest.digest() );
+		return number.toString( 16 );
+	}
+
+	/**
+	 * Formats the given number of bytes into human-readable format (e.g. "72.7 KiB").
+	 */
 	public static String formatFileSize( double d )
 	{
 		String[] types = { "bytes", "KiB", "MiB", "GiB", "TiB", "PiB", "XiB", "ZiB", "YiB", "WTFB" };
