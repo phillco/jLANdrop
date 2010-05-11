@@ -29,36 +29,36 @@ public class TransferForm extends JFrame
 		statusLabel = new JLabel();
 		statusLabel.setFont( statusLabel.getFont().deriveFont( Font.BOLD, 14 ) );
 		statusLabel.setAlignmentX( CENTER_ALIGNMENT );
-		detailLabel1 = new JLabel();
-		detailLabel2 = new JLabel();
+		detailLabel1 = new JLabel( " " );
+		detailLabel2 = new JLabel( " " );
 
 		detailLabel1.setAlignmentX( CENTER_ALIGNMENT );
 		detailLabel2.setAlignmentX( CENTER_ALIGNMENT );
 		detailLabel2.setForeground( SystemColor.controlDkShadow );
 
-		add( Box.createVerticalStrut( 5 ));
+		add( Box.createVerticalStrut( 10 ) );
 		add( statusLabel );
-		add( Box.createVerticalStrut( 5 ));
+		add( Box.createVerticalStrut( 5 ) );
 		add( detailLabel1 );
-		add( Box.createVerticalStrut( 3 ));
+		add( Box.createVerticalStrut( 3 ) );
 		add( detailLabel2 );
-		add( Box.createVerticalStrut( 8 ));
-		add( Box.createVerticalGlue());
-		
+		add( Box.createVerticalStrut( 2 ) );
+		add( Box.createVerticalGlue() );
+
 		JPanel progressPanel = new JPanel();
 		{
 			progressBar = new JProgressBar();
-			progressPanel.add( progressBar );		
+			progressPanel.add( progressBar );
 			progressBar.setPreferredSize( new Dimension( 300, 25 ) );
-			progressPanel.setPreferredSize( new Dimension( 250, 65 ) );
+			progressPanel.setPreferredSize( new Dimension( 250, 40 ) );
 		}
 		add( progressPanel );
-		add( Box.createVerticalStrut( 3 ));
-		add( Box.createVerticalGlue());
-
+		add( Box.createVerticalStrut( 3 ) );
+		add( Box.createVerticalGlue() );
 
 		updateComponents();
-		setSize( 350, 155 );
+		setMinimumSize( new Dimension( 400, 20 ) );
+		pack();
 		setResizable( false );
 
 		addWindowListener( new java.awt.event.WindowAdapter()
