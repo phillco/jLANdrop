@@ -66,8 +66,8 @@ public class TransferForm extends JFrame
 		if ( ( transfer.getStage() != Transfer.Stage.TRANSFERRING ) || ( System.currentTimeMillis() - lastUpdateTime > 100 ) )
 		{
 			statusLabel.setText( transfer.toString() );
-			detailLabel1.setText( transfer.getDetailLine1() );
-			detailLabel2.setText( transfer.getDetailLine2() );
+			detailLabel1.setText( transfer.getDetails() );
+			detailLabel2.setText( transfer.getTimeLeft() );
 			lastUpdateTime = System.currentTimeMillis();
 		}
 	}
