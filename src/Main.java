@@ -17,7 +17,6 @@ public class Main
 		try
 		{
 			UIManager.setLookAndFeel( UIManager.getSystemLookAndFeelClassName() );
-
 		}
 		catch ( InstantiationException e )
 		{

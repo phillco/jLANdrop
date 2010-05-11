@@ -99,8 +99,8 @@ public class MainFrame extends JFrame implements ActionListener
 	{
 		if ( Main.getListener() != null )
 		{
-			localIP.setVisible( Main.getListener().isStarted() );
-			if ( !Main.getListener().isStarted() )
+			localIP.setVisible( Main.getListener().isEnabled() );
+			if ( !Main.getListener().isEnabled() )
 				receiveStatus.setText( "Server starting..." );
 			else
 			{

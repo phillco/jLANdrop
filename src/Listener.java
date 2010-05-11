@@ -6,17 +6,18 @@ import java.net.UnknownHostException;
 import javax.swing.JOptionPane;
 
 /**
- * Each peer runs a Listener, which listens for incoming transfer requests.
- * @author Phillip Cohen
+ * Each peer runs a Listener, which listens for incoming transfer requests, then creates IncomingTransfer threads for them.
  */
 public class Listener
 {
-
 	/**
 	 * The default port we listen for connections on.
 	 */
 	public final static int DEFAULT_PORT = 50900;
 
+	/**
+	 * The port we're currently listening on.
+	 */
 	private int port;
 
 	/**
@@ -29,11 +30,10 @@ public class Listener
 	 */
 	private final AcceptThread acceptThread = new AcceptThread();
 
-	private boolean started = false;
-
-	public Listener()
-	{
-	}
+	/**
+	 * Whether we're actively listening for connections.
+	 */
+	private boolean enabled = false;
 
 	public void connect()
 	{
@@ -51,8 +51,8 @@ public class Listener
 		}
 
 		// We're connected!
-		started = true;
-		System.out.println( "Server started at " + getServerIP() + "!" );
+		enabled = true;
+		System.out.println( "Listener started at " + getServerIP() + "!" );
 		acceptThread.start();
 		Main.getMainFrame().updateLabels();
 	}
@@ -60,6 +60,7 @@ public class Listener
 	@SuppressWarnings( "deprecation" )
 	public void disconnect()
 	{
+		enabled = false;
 		acceptThread.stop();
 	}
 
@@ -81,9 +82,9 @@ public class Listener
 		}
 	}
 
-	public boolean isStarted()
+	public boolean isEnabled()
 	{
-		return started;
+		return enabled;
 	}
 
 	/**
@@ -94,12 +95,11 @@ public class Listener
 		@Override
 		public void run()
 		{
-			while ( started )
+			while ( enabled )
 				try
 				{
 					// Wait for a new client.
-					IncomingTransfer transfer = new IncomingTransfer( listeningSocket.accept() );
-					Main.incomingTransfers.add( transfer ); // Stop here until the client connects.
+					new IncomingTransfer( listeningSocket.accept() ); // Stop here until the client connects.
 				}
 				catch ( final IOException e )
 				{
