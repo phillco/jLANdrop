@@ -11,6 +11,12 @@ import javax.swing.JOptionPane;
  */
 public class Listener
 {
+
+	/**
+	 * The default port we listen for connections on.
+	 */
+	public final static int DEFAULT_PORT = 50900;
+
 	private int port;
 
 	/**
@@ -34,7 +40,7 @@ public class Listener
 		// Start listening for connections.
 		try
 		{
-			port = Protocol.DEFAULT_PORT;
+			port = DEFAULT_PORT;
 			listeningSocket = new ServerSocket( port );
 		}
 		catch ( final IOException e )

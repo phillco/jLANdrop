@@ -102,10 +102,10 @@ public class OutgoingTransfer extends Transfer
 		FileInputStream fileIn = new FileInputStream( file );
 
 		// Iterate through the file in chunk-sized increments.
-		for ( int i = 0; i < file.length(); i += Protocol.CHUNK_SIZE )
+		for ( int i = 0; i < file.length(); i += Transfer.CHUNK_SIZE )
 		{
 			// Calculate the number of bytes we're about to send. (CHUNK_SIZE or less, if we're at the end of the file)
-			int numBytes = Math.min( Protocol.CHUNK_SIZE, fileSize - i );
+			int numBytes = Math.min( Transfer.CHUNK_SIZE, fileSize - i );
 
 			// Create the chunk.
 			byte[] chunk = new byte[numBytes];

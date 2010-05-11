@@ -112,10 +112,10 @@ public class IncomingTransfer extends Transfer
 		form.setVisible( true );
 
 		// Iterate through the file in chunk-sized increments.
-		for ( int i = 0; i < fileSize; i += Protocol.CHUNK_SIZE )
+		for ( int i = 0; i < fileSize; i += Transfer.CHUNK_SIZE )
 		{
 			// Calculate the number of bytes we're about to receive. (CHUNK_SIZE or less, if we're at the end of the file)
-			int numBytes = Math.min( Protocol.CHUNK_SIZE, fileSize - i );
+			int numBytes = Math.min( Transfer.CHUNK_SIZE, fileSize - i );
 
 			// Create the chunk.
 			byte[] chunk = new byte[numBytes];

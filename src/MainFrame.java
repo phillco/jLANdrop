@@ -130,7 +130,7 @@ public class MainFrame extends JFrame implements ActionListener
 			}
 
 			// Read the connection address.
-			String input = JOptionPane.showInputDialog( "Enter the address and port you'd like to send this file to (with port).", "127.0.0.1:" + Protocol.DEFAULT_PORT );
+			String input = JOptionPane.showInputDialog( "Enter the address and port you'd like to send this file to (with port).", "127.0.0.1:" + Listener.DEFAULT_PORT );
 			try
 			{
 				if ( ( input == null ) || ( input.length() < 1 ) )

@@ -14,6 +14,11 @@ public abstract class Transfer extends Thread
 	{
 		WAITING, REJECTED, TRANSFERRING, VERIFYING, FINISHED, FAILED
 	}
+	
+	/**
+	 * The file is sent in a series of chunks; here we define how big those are (in bytes).
+	 */
+	public final static int CHUNK_SIZE = (int) ( 1024 * 1.5 );
 
 	/**
 	 * Which stage this transfer is in.
