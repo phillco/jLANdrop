@@ -49,6 +49,8 @@ public class MainFrame extends JFrame implements ActionListener
 		JPanel receivePanel = new JPanel();
 		{
 			// receivePanel.setLayout( new BoxLayout( receivePanel, BoxLayout.Y_AXIS ) );
+			receivePanel.add( Box.createHorizontalGlue() );
+			receivePanel.add( Box.createHorizontalStrut( 10 ) );
 			receiveStatus = new JLabel( "Server starting..." );
 			receiveStatus.setFont( receiveStatus.getFont().deriveFont( Font.BOLD ) );
 			receivePanel.add( receiveStatus );
@@ -57,11 +59,13 @@ public class MainFrame extends JFrame implements ActionListener
 			receivePanel.add( localIP );
 
 			// receivePanel.add( new JButton( "Copy" ) );
-			receivePanel.add( Box.createRigidArea( new Dimension( 5, 5 ) ) );
-			receivePanel.setPreferredSize( new Dimension( 400, 100 ) );
+			receivePanel.add( Box.createHorizontalStrut( 5 ) );
+			receivePanel.setPreferredSize( new Dimension( 450, 75 ) );
 			receivePanel.add( sendButton );
+			receivePanel.add( Box.createHorizontalStrut( 10 ) );
+			receivePanel.add( Box.createHorizontalGlue() );
 		}
-		add( Box.createRigidArea( new Dimension( 1, 10 ) ) );
+		add( Box.createVerticalStrut( 10 ) );
 		add( receivePanel );
 
 		// ================
@@ -80,7 +84,8 @@ public class MainFrame extends JFrame implements ActionListener
 		updateLabels();
 		setTitle( "P2P File Transfer!" );
 		setDefaultCloseOperation( DISPOSE_ON_CLOSE );
-		setSize( 450, 180 );
+		setMinimumSize( new Dimension( 350, 175 ));
+		pack();
 		setResizable( false );
 		setVisible( true );
 
