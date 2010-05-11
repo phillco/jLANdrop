@@ -69,7 +69,8 @@ public class TransferForm extends JFrame
 			{
 				if ( !( transfer.getStage() == Transfer.Stage.TRANSFERRING || transfer.getStage() == Transfer.Stage.VERIFYING ) || JOptionPane.showConfirmDialog( null, "Are you sure you want to end this transfer?", "Cancel transfer", JOptionPane.YES_NO_OPTION ) == JOptionPane.YES_OPTION )
 				{
-					transfer.transferFailed( "Cancelled" );
+					if ( transfer.getStage() != Transfer.Stage.FINISHED )
+						transfer.transferFailed( "Cancelled" );
 					transfer.stop();
 					dispose();
 				}
