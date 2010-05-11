@@ -1,7 +1,3 @@
-import java.util.LinkedList;
-
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 
 public class Main
 {
@@ -9,28 +5,12 @@ public class Main
 
 	private static Listener listener = new Listener();
 
-	public static LinkedList<IncomingTransfer> incomingTransfers = new LinkedList<IncomingTransfer>();
-	public static LinkedList<OutgoingTransfer> outgoingTransfers = new LinkedList<OutgoingTransfer>();
-
 	public static void main( String[] args )
 	{
-		try
-		{
-			UIManager.setLookAndFeel( UIManager.getSystemLookAndFeelClassName() );
-		}
-		catch ( InstantiationException e )
-		{
-		}
-		catch ( ClassNotFoundException e )
-		{
-		}
-		catch ( UnsupportedLookAndFeelException e )
-		{
-		}
-		catch ( IllegalAccessException e )
-		{
-		}
+		// Use the native look and feel.
+		Util.useNativeLookAndFeel();
 
+		// Create the main form; start listening for connections.
 		mainFrame = new MainFrame();
 		listener.connect();
 	}

@@ -4,19 +4,21 @@ import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
 
 import javax.swing.JOptionPane;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 public class Util
 {
-	public final static long SECOND = 1000;
-	public final static long SECONDS_IN_MINUTE = 60;
+	private final static long SECOND = 1000;
+	private final static long SECONDS_IN_MINUTE = 60;
 
-	public final static long MINUTE = SECOND * SECONDS_IN_MINUTE;
-	public final static long MINUTES_IN_HOUR = 60;
+	private final static long MINUTE = SECOND * SECONDS_IN_MINUTE;
+	private final static long MINUTES_IN_HOUR = 60;
 
-	public final static long HOUR = MINUTE * MINUTES_IN_HOUR;
-	public final static long HOURS_IN_DAY = 24;
+	private final static long HOUR = MINUTE * MINUTES_IN_HOUR;
+	private final static long HOURS_IN_DAY = 24;
 
-	public final static long DAY = HOUR * HOURS_IN_DAY;
+	private final static long DAY = HOUR * HOURS_IN_DAY;
 
 	/**
 	 * Converts time (in milliseconds) to human-readable format
@@ -102,6 +104,20 @@ public class Util
 		if ( d > 0 )
 			index = Math.min( types.length - 1, (int) ( Math.log( d ) / Math.log( 1024 ) ) );
 		return new DecimalFormat( "0.0" ).format( d / Math.pow( 1024, index ) ) + " " + types[index];
+	}
+
+	/**
+	 * Uses the native OS's UI styling.
+	 */
+	public static void useNativeLookAndFeel()
+	{
+		try
+		{
+			UIManager.setLookAndFeel( UIManager.getSystemLookAndFeelClassName() );
+		}
+		catch ( Exception e )
+		{
+		}
 	}
 
 }
