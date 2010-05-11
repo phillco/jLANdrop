@@ -178,7 +178,7 @@ public class IncomingTransfer extends Transfer
 			case FAILED:
 				return "Transfer failed!";
 			case FINISHED:
-				return "Transfer completed successfully.";
+				return "File received successfully!";
 		}
 
 		return "Unknown";

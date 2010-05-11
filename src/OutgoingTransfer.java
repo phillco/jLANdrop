@@ -160,9 +160,18 @@ public class OutgoingTransfer extends Transfer
 			case FAILED:
 				return "Transfer failed!";
 			case FINISHED:
-				return "Transfer completed successfully!";
+				return "File sent successfully!";
 			default:
 				return "Unknown";
 		}
+	}
+
+	@Override
+	public String getDetails()
+	{
+		if ( getStage() == Stage.WAITING )
+			return "(They must accept the transfer.)";
+		else
+			return super.getDetails();
 	}
 }

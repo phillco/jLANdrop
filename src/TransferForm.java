@@ -1,11 +1,13 @@
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.SystemColor;
+import java.awt.event.WindowEvent;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 
@@ -19,7 +21,7 @@ public class TransferForm extends JFrame
 
 	private long lastUpdateTime = 0;
 
-	public TransferForm( Transfer transfer )
+	public TransferForm( final Transfer transfer )
 	{
 		this.transfer = transfer;
 		setLayout( new BoxLayout( getContentPane(), BoxLayout.Y_AXIS ) );
@@ -57,6 +59,20 @@ public class TransferForm extends JFrame
 		updateComponents();
 		setSize( 350, 145 );
 		setResizable( false );
+
+		addWindowListener( new java.awt.event.WindowAdapter()
+		{
+			@Override
+			public void windowClosing( WindowEvent winEvt )
+			{
+				if ( !( transfer.getStage() == Transfer.Stage.TRANSFERRING || transfer.getStage() == Transfer.Stage.VERIFYING ) || JOptionPane.showConfirmDialog( null, "Are you sure you want to end this transfer?", "Cancel transfer", JOptionPane.YES_NO_OPTION ) == JOptionPane.YES_OPTION )
+				{
+					transfer.transferFailed( "Cancelled" );
+					transfer.stop();
+					dispose();
+				}
+			}
+		} );
 	}
 
 	public void updateComponents()
