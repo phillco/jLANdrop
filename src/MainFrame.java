@@ -84,7 +84,7 @@ public class MainFrame extends JFrame implements ActionListener
 		updateLabels();
 		setTitle( "P2P File Transfer!" );
 		setDefaultCloseOperation( DISPOSE_ON_CLOSE );
-		setMinimumSize( new Dimension( 350, 175 ));
+		setMinimumSize( new Dimension( 350, 175 ) );
 		pack();
 		setResizable( false );
 		setVisible( true );
@@ -99,7 +99,7 @@ public class MainFrame extends JFrame implements ActionListener
 			}
 		} );
 	}
-
+	
 	public void updateLabels()
 	{
 		if ( Main.getListener() != null )
@@ -119,39 +119,37 @@ public class MainFrame extends JFrame implements ActionListener
 	@Override
 	public void actionPerformed( ActionEvent arg0 )
 	{
-		// Create a file chooser
-		final JFileChooser fc = new JFileChooser();
+		// "Send" button was pressed. Show a file selector dialog.
+		final JFileChooser fileChooser = new JFileChooser();
 
-		// In response to a button click:
-		int returnVal = fc.showOpenDialog( this );
+		if ( fileChooser.showOpenDialog( this ) != JFileChooser.APPROVE_OPTION )
+			return;
 
-		if ( returnVal == JFileChooser.APPROVE_OPTION )
+		// Read in the selected file.
+		File file = fileChooser.getSelectedFile();
+		if ( fileChooser.getSelectedFile().length() > Long.MAX_VALUE )
 		{
-			File file = fc.getSelectedFile();
-			if ( fc.getSelectedFile().length() > Long.MAX_VALUE )
-			{
-				JOptionPane.showMessageDialog( this, "The file you selected is too big; the max file size that can be transferred is " + Util.formatFileSize( Long.MAX_VALUE ) + "." );
-				return;
-			}
-
-			// Read the connection address.
-			String input = JOptionPane.showInputDialog( "Enter the address and port you'd like to send this file to (with port).", "127.0.0.1:" + Listener.DEFAULT_PORT );
-			try
-			{
-				if ( ( input == null ) || ( input.length() < 1 ) )
-					return;
-				if ( input.split( ":" ).length == 2 )
-				{
-					// Create the main frame, server, and controller.
-					int port = Integer.parseInt( input.split( ":" )[1] );
-					new OutgoingTransfer( file, input.split( ":" )[0], port );
-				}
-			}
-			catch ( NumberFormatException ex )
-			{
-				JOptionPane.showMessageDialog( null, "Error parsing that port.", "Input error", JOptionPane.ERROR_MESSAGE );
-			}
-
+			JOptionPane.showMessageDialog( this, "The file you selected is too big; the max file size that can be transferred is " + Util.formatFileSize( Long.MAX_VALUE ) + "." );
+			return;
 		}
+
+		// Read the connection address.
+		String input = JOptionPane.showInputDialog( "Enter the address and port you'd like to send this file to (with port).", "127.0.0.1:" + Listener.DEFAULT_PORT );
+		try
+		{
+			if ( ( input == null ) || ( input.length() < 1 ) )
+				return;
+			if ( input.split( ":" ).length == 2 )
+			{
+				// Create the transfer.
+				int port = Integer.parseInt( input.split( ":" )[1] );
+				new OutgoingTransfer( file, input.split( ":" )[0], port );
+			}
+		}
+		catch ( NumberFormatException ex )
+		{
+			JOptionPane.showMessageDialog( null, "Error parsing that port.", "Input error", JOptionPane.ERROR_MESSAGE );
+		}
+
 	}
 }
