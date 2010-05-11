@@ -92,11 +92,11 @@ public class Util
 	}
 
 	/**
-	 * Formats the given number of bytes into human-readable format (e.g. "72.7 KiB").
+	 * Formats the given number of bytes into human-readable format (e.g. "72.7 KB").
 	 */
 	public static String formatFileSize( double d )
 	{
-		String[] types = { "bytes", "KiB", "MiB", "GiB", "TiB", "PiB", "XiB", "ZiB", "YiB" };
+		String[] types = { "bytes", "KB", "MB", "GB", "TB", "PB", "XB", "ZB", "YB" };
 
 		int index = 0;
 		if ( d > 0 )
