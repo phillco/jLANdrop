@@ -51,14 +51,14 @@ public abstract class Transfer extends Thread
 	protected MessageDigest verificationDigest = null;
 
 	/**
-	 * Size of the file we're transferring.
+	 * Size of the file we're transferring, in bytes.
 	 */
-	protected int fileSize;
+	protected long fileSize;
 
 	/**
 	 * How many bytes we've sent or received (for the progress bar).
 	 */
-	protected int bytesTransferred = 0;
+	protected long bytesTransferred = 0;
 
 	/**
 	 * When we started the transfer - see System.currentTimeMillis();

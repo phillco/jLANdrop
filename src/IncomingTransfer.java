@@ -66,7 +66,7 @@ public class IncomingTransfer extends Transfer
 	private void startTransfer() throws IOException
 	{
 		fileName = dataIn.readUTF();
-		fileSize = dataIn.readInt();
+		fileSize = dataIn.readLong();
 
 		setName( "Receiving " + fileName );
 		System.out.println( socket.getInetAddress() + " would like to send us " + fileName + " (" + Util.formatFileSize( fileSize ) + ")" );
@@ -112,10 +112,10 @@ public class IncomingTransfer extends Transfer
 		form.setVisible( true );
 
 		// Iterate through the file in chunk-sized increments.
-		for ( int i = 0; i < fileSize; i += Transfer.CHUNK_SIZE )
+		for ( long i = 0; i < fileSize; i += Transfer.CHUNK_SIZE )
 		{
 			// Calculate the number of bytes we're about to receive. (CHUNK_SIZE or less, if we're at the end of the file)
-			int numBytes = Math.min( Transfer.CHUNK_SIZE, fileSize - i );
+			int numBytes = (int) Math.min( Transfer.CHUNK_SIZE, fileSize - i );
 
 			// Create the chunk.
 			byte[] chunk = new byte[numBytes];

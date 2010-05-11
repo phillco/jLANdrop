@@ -62,6 +62,7 @@ public class TransferForm extends JFrame
 
 		addWindowListener( new java.awt.event.WindowAdapter()
 		{
+			@SuppressWarnings( "deprecation" )
 			@Override
 			public void windowClosing( WindowEvent winEvt )
 			{

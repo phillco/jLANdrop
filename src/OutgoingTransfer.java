@@ -22,7 +22,7 @@ public class OutgoingTransfer extends Transfer
 	{
 		super( "Sending " + file.getName() );
 		this.file = file;
-		fileSize = (int) file.length();
+		fileSize = file.length();
 
 		try
 		{
@@ -84,7 +84,7 @@ public class OutgoingTransfer extends Transfer
 
 		// Send the user the file's attributes.
 		dataOut.writeUTF( file.getName() );
-		dataOut.writeInt( fileSize );
+		dataOut.writeLong( fileSize );
 		dataOut.flush();
 	}
 
@@ -102,10 +102,10 @@ public class OutgoingTransfer extends Transfer
 		FileInputStream fileIn = new FileInputStream( file );
 
 		// Iterate through the file in chunk-sized increments.
-		for ( int i = 0; i < file.length(); i += Transfer.CHUNK_SIZE )
+		for ( long i = 0; i < file.length(); i += Transfer.CHUNK_SIZE )
 		{
 			// Calculate the number of bytes we're about to send. (CHUNK_SIZE or less, if we're at the end of the file)
-			int numBytes = Math.min( Transfer.CHUNK_SIZE, fileSize - i );
+			int numBytes = (int) Math.min( Transfer.CHUNK_SIZE, fileSize - i );
 
 			// Create the chunk.
 			byte[] chunk = new byte[numBytes];

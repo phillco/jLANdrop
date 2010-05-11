@@ -123,9 +123,9 @@ public class MainFrame extends JFrame implements ActionListener
 		if ( returnVal == JFileChooser.APPROVE_OPTION )
 		{
 			File file = fc.getSelectedFile();
-			if ( fc.getSelectedFile().length() > Integer.MAX_VALUE )
+			if ( fc.getSelectedFile().length() > Long.MAX_VALUE )
 			{
-				JOptionPane.showMessageDialog( this, "The file you selected is too big; the max file size that can be transferred is " + Util.formatFileSize( Integer.MAX_VALUE ) + "." );
+				JOptionPane.showMessageDialog( this, "The file you selected is too big; the max file size that can be transferred is " + Util.formatFileSize( Long.MAX_VALUE ) + "." );
 				return;
 			}
 
