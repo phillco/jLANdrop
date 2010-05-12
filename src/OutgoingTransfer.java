@@ -68,6 +68,7 @@ public class OutgoingTransfer extends Transfer
 		}
 		catch ( IOException e )
 		{
+			e.printStackTrace();
 			transferFailed( "IOException during transfer" );
 		}
 	}
@@ -122,7 +123,9 @@ public class OutgoingTransfer extends Transfer
 		}
 
 		// ...and we're done.
+		stopTime = System.currentTimeMillis();
 		fileIn.close();
+		dataIn.readBoolean();
 	}
 
 	/**

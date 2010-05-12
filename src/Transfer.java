@@ -18,7 +18,7 @@ public abstract class Transfer extends Thread
 	/**
 	 * The file is sent in a series of chunks; here we define how big those are (in bytes).
 	 */
-	public final static int CHUNK_SIZE = (int) ( 1024 * 1.5 );
+	public final static int CHUNK_SIZE = (int) ( 1024 * 4 );
 
 	/**
 	 * Which stage this transfer is in.
@@ -61,9 +61,9 @@ public abstract class Transfer extends Thread
 	protected long bytesTransferred = 0;
 
 	/**
-	 * When we started the transfer - see System.currentTimeMillis();
+	 * When we started and stopped the transfer - see System.currentTimeMillis();
 	 */
-	protected long startTime;
+	protected long startTime, stopTime;
 
 	/**
 	 * Error, if any, that occurred (displayed on the form if stage is FAILED).
@@ -101,7 +101,7 @@ public abstract class Transfer extends Thread
 		if ( stage == Stage.TRANSFERRING )
 			return Util.formatFileSize( bytesTransferred ) + " of " + Util.formatFileSize( fileSize ) + " at " + Util.formatFileSize( getTransferSpeed() * 1000 ) + "/s";
 		else if ( stage == Stage.FINISHED )
-			return "Verified with MD5";
+			return "Average speed: " + Util.formatFileSize( fileSize * 1000 / ( stopTime - startTime ) ) + "/s";
 		else if ( ( stage == Stage.FAILED ) && ( error.length() > 0 ) )
 			return error;
 		else
@@ -123,8 +123,10 @@ public abstract class Transfer extends Thread
 				return "about " + Util.millisToLongDHMS( milliSecondsLeft ) + " left";
 			}
 		}
+		else if ( stage == Stage.FINISHED )
+			return "Verified with MD5";
 		else
-			return " ";
+			return "";
 	}
 
 	/**

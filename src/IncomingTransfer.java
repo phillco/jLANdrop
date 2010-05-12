@@ -56,6 +56,8 @@ public class IncomingTransfer extends Transfer
 		}
 		catch ( IOException e )
 		{
+			e.printStackTrace();
+
 			transferFailed( "IOException during transfer" );
 		}
 	}
@@ -112,26 +114,30 @@ public class IncomingTransfer extends Transfer
 		form.setVisible( true );
 
 		// Iterate through the file in chunk-sized increments.
-		for ( long i = 0; i < fileSize; i += Transfer.CHUNK_SIZE )
+		while ( bytesTransferred < fileSize )
 		{
-			// Calculate the number of bytes we're about to receive. (CHUNK_SIZE or less, if we're at the end of the file)
-			int numBytes = (int) Math.min( Transfer.CHUNK_SIZE, fileSize - i );
-
 			// Create the chunk.
-			byte[] chunk = new byte[numBytes];
+			byte[] chunk = new byte[CHUNK_SIZE * 5];
 
 			// Read in the chunk, add it to our MD5 digest, and send it to the file.
-			dataIn.read( chunk, 0, numBytes );
-			verificationDigest.update( chunk, 0, numBytes );
-			fileOut.write( chunk, 0, numBytes );
+			int bytesRead = dataIn.read( chunk );
+			if ( bytesRead > 0 )
+			{
+				verificationDigest.update( chunk, 0, bytesRead );
+				fileOut.write( chunk, 0, bytesRead );
 
-			// Update the form.
-			bytesTransferred += numBytes;
-			form.updateComponents();
+				// Update the form.
+				bytesTransferred += bytesRead;
+				form.updateComponents();
+			}
+			else
+				break;
 		}
 
 		// ...and we're done.
+		stopTime = System.currentTimeMillis();
 		fileOut.close();
+		dataOut.writeBoolean( true );
 	}
 
 	/**

@@ -42,22 +42,22 @@ public class TransferForm extends JFrame
 		add( detailLabel1 );
 		add( Box.createVerticalStrut( 3 ) );
 		add( detailLabel2 );
-		add( Box.createVerticalStrut( 2 ) );
+		add( Box.createVerticalStrut( 3 ) );
 		add( Box.createVerticalGlue() );
 
 		JPanel progressPanel = new JPanel();
 		{
 			progressBar = new JProgressBar();
 			progressPanel.add( progressBar );
-			progressBar.setPreferredSize( new Dimension( 300, 25 ) );
-			progressPanel.setPreferredSize( new Dimension( 250, 40 ) );
+			progressBar.setPreferredSize( new Dimension( 300, 22 ) );
+			progressPanel.setPreferredSize( new Dimension( 250, 55 ) );
 		}
 		add( progressPanel );
 		add( Box.createVerticalStrut( 3 ) );
 		add( Box.createVerticalGlue() );
 
 		updateComponents();
-		setMinimumSize( new Dimension( 400, 20 ) );
+		setMinimumSize( new Dimension( 400, 60 ) );
 		pack();
 		setResizable( false );
 
