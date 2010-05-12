@@ -74,7 +74,7 @@ public class MainFrame extends JFrame implements ActionListener
 
 		JPanel footerPanel = new JPanel();
 		{
-			JLabel footerLabel = new JLabel( "Version 1.0 / created by Phillip Cohen" );
+			JLabel footerLabel = new JLabel( "Version 1.1 / created by Phillip Cohen" );
 			footerLabel.setForeground( Color.gray );
 			footerPanel.add( footerLabel );
 		}
