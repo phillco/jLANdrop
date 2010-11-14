@@ -67,7 +67,7 @@ public class TransferForm extends JFrame
 			@Override
 			public void windowClosing( WindowEvent winEvt )
 			{
-				if ( !( transfer.getStage() == Transfer.Stage.TRANSFERRING || transfer.getStage() == Transfer.Stage.VERIFYING ) || JOptionPane.showConfirmDialog( null, "Are you sure you want to end this transfer?", "Cancel transfer", JOptionPane.YES_NO_OPTION ) == JOptionPane.YES_OPTION )
+				if ( !( ( transfer.getStage() == Transfer.Stage.TRANSFERRING ) || ( transfer.getStage() == Transfer.Stage.VERIFYING ) ) || ( JOptionPane.showConfirmDialog( null, "Are you sure you want to end this transfer?", "Cancel transfer", JOptionPane.YES_NO_OPTION ) == JOptionPane.YES_OPTION ) )
 				{
 					if ( transfer.getStage() != Transfer.Stage.FINISHED )
 						transfer.transferFailed( "Cancelled" );

@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.util.Queue;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -12,14 +13,20 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 public class MainFrame extends JFrame implements ActionListener
 {
 	private JButton sendButton;
 
 	private JLabel receiveStatus, localIP;
+
+	private JList receiverList;
 
 	public MainFrame()
 	{
@@ -44,6 +51,7 @@ public class MainFrame extends JFrame implements ActionListener
 		// Add the receive label.
 		// ======================
 		sendButton = new JButton( "Send a file..." );
+		sendButton.setEnabled( false );
 		sendButton.addActionListener( this );
 
 		JPanel receivePanel = new JPanel();
@@ -60,7 +68,7 @@ public class MainFrame extends JFrame implements ActionListener
 
 			// receivePanel.add( new JButton( "Copy" ) );
 			receivePanel.add( Box.createHorizontalStrut( 5 ) );
-			receivePanel.setPreferredSize( new Dimension( 450, 75 ) );
+			receivePanel.setPreferredSize( new Dimension( 450, 40 ) );
 			receivePanel.add( sendButton );
 			receivePanel.add( Box.createHorizontalStrut( 10 ) );
 			receivePanel.add( Box.createHorizontalGlue() );
@@ -68,13 +76,31 @@ public class MainFrame extends JFrame implements ActionListener
 		add( Box.createVerticalStrut( 10 ) );
 		add( receivePanel );
 
+		JPanel receipientsPanel = new JPanel();
+		{
+			receiverList = new JList();
+			receiverList.addListSelectionListener( new ListSelectionListener()
+			{
+				@Override
+				public void valueChanged( ListSelectionEvent arg0 )
+				{
+					sendButton.setEnabled( receiverList.getSelectedValue() != null );
+				}
+			} );
+			JScrollPane scrollContainer = new JScrollPane( receiverList );
+			scrollContainer.setPreferredSize( new Dimension( 400, 75 ) );
+			receipientsPanel.add( scrollContainer );
+		}
+		add( receipientsPanel );
+		add( Box.createVerticalStrut( 10 ) );
+
 		// ================
 		// Add the footer.
 		// ================
 
 		JPanel footerPanel = new JPanel();
 		{
-			JLabel footerLabel = new JLabel( "Version 1.1 / created by Phillip Cohen" );
+			JLabel footerLabel = new JLabel( "Version 1.2 / created by Phillip Cohen" );
 			footerLabel.setForeground( Color.gray );
 			footerPanel.add( footerLabel );
 		}
@@ -98,8 +124,21 @@ public class MainFrame extends JFrame implements ActionListener
 				System.exit( 0 );
 			}
 		} );
+
+		MulticastManager.addPeerListener( new PeerEventListener()
+		{
+			@Override
+			public void peerListUpdated( Queue<Peer> p )
+			{
+				Object selected = receiverList.getSelectedValue();
+				receiverList.setListData( p.toArray() );
+				receiverList.setSelectedValue( selected, true );
+			}
+		} );
+		MulticastManager.startBroadcastLoop();
+		MulticastManager.startListenLoop();
 	}
-	
+
 	public void updateLabels()
 	{
 		if ( Main.getListener() != null )
@@ -110,7 +149,7 @@ public class MainFrame extends JFrame implements ActionListener
 			else
 			{
 				receiveStatus.setText( "Ready to receive files!" );
-				localIP.setText( "Your IP is: " + Main.getListener().getServerIP() );
+				localIP.setText( "Choose a user to send to: " );
 			}
 		}
 		invalidate();
@@ -133,23 +172,9 @@ public class MainFrame extends JFrame implements ActionListener
 			return;
 		}
 
-		// Read the connection address.
-		String input = JOptionPane.showInputDialog( "Enter the address and port you'd like to send this file to (with port).", "127.0.0.1:" + Listener.DEFAULT_PORT );
-		try
-		{
-			if ( ( input == null ) || ( input.length() < 1 ) )
-				return;
-			if ( input.split( ":" ).length == 2 )
-			{
-				// Create the transfer.
-				int port = Integer.parseInt( input.split( ":" )[1] );
-				new OutgoingTransfer( file, input.split( ":" )[0], port );
-			}
-		}
-		catch ( NumberFormatException ex )
-		{
-			JOptionPane.showMessageDialog( null, "Error parsing that port.", "Input error", JOptionPane.ERROR_MESSAGE );
-		}
-
+		if ( ( receiverList.getSelectedValue() == null ) || !( receiverList.getSelectedValue() instanceof Peer ) )
+			JOptionPane.showMessageDialog( this, "You didn't select a sender!" );
+		else
+			new OutgoingTransfer( file, (Peer) receiverList.getSelectedValue() );
 	}
 }

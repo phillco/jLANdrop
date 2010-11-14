@@ -119,4 +119,15 @@ public class Util
 		}
 	}
 
+	public static void safeSleep( int milliseconds )
+	{
+		try
+		{
+			Thread.sleep( milliseconds );
+		}
+		catch ( InterruptedException e )
+		{
+		}
+	}
+
 }

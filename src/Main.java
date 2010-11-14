@@ -1,4 +1,3 @@
-
 public class Main
 {
 	private static MainFrame mainFrame;

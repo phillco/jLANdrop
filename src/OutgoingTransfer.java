@@ -18,7 +18,7 @@ public class OutgoingTransfer extends Transfer
 	/**
 	 * Connects to the given peer to transfer <code>file</code>.
 	 */
-	public OutgoingTransfer( File file, String serverAddress, int serverPort )
+	public OutgoingTransfer( File file, Peer p )
 	{
 		super( "Sending " + file.getName() );
 		this.file = file;
@@ -27,19 +27,19 @@ public class OutgoingTransfer extends Transfer
 		try
 		{
 			// Hook up the socket.
-			socket = new Socket( serverAddress, serverPort );
+			socket = new Socket( p.getAddress(), p.getPort() );
 			dataIn = new DataInputStream( socket.getInputStream() );
 			dataOut = new DataOutputStream( socket.getOutputStream() );
 		}
 		catch ( final UnknownHostException e )
 		{
-			JOptionPane.showMessageDialog( null, "Couldn't look up " + serverAddress + ".", "Connection error", JOptionPane.ERROR_MESSAGE );
+			JOptionPane.showMessageDialog( null, "Couldn't look up " + p.getAddress() + ".", "Connection error", JOptionPane.ERROR_MESSAGE );
 			System.exit( 0 );
 			return;
 		}
 		catch ( final IOException e )
 		{
-			JOptionPane.showMessageDialog( null, "Couldn't connect to " + serverAddress + ".", "Connection error", JOptionPane.ERROR_MESSAGE );
+			JOptionPane.showMessageDialog( null, "Couldn't connect to " + p.getAddress() + ".", "Connection error", JOptionPane.ERROR_MESSAGE );
 			System.exit( 0 );
 			return;
 		}
