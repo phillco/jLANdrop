@@ -101,7 +101,12 @@ public abstract class Transfer extends Thread
 		if ( stage == Stage.TRANSFERRING )
 			return Util.formatFileSize( bytesTransferred ) + " of " + Util.formatFileSize( fileSize ) + " at " + Util.formatFileSize( getTransferSpeed() * 1000 ) + "/s";
 		else if ( stage == Stage.FINISHED )
-			return "Average speed: " + Util.formatFileSize( fileSize * 1000 / ( stopTime - startTime ) ) + "/s";
+		{
+			if ( stopTime > startTime )
+				return "Average speed: " + Util.formatFileSize( fileSize * 1000 / ( stopTime - startTime ) ) + "/s";
+			else
+				return "So fast, we couldn't even clock it.";
+		}
 		else if ( ( stage == Stage.FAILED ) && ( error.length() > 0 ) )
 			return error;
 		else
