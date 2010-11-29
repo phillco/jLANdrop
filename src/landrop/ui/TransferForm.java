@@ -1,3 +1,4 @@
+package landrop.ui;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.SystemColor;
@@ -10,6 +11,9 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
+
+import landrop.transfer.Transfer;
+import landrop.transfer.Transfer.Stage;
 
 public class TransferForm extends JFrame
 {

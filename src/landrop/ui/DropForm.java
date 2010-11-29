@@ -1,3 +1,4 @@
+package landrop.ui;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -10,6 +11,10 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+
+import landrop.Main;
+import landrop.Util;
+import landrop.ui.FileDrop.Listener;
 
 /**
  * The main application form that lets the user drop files onto it. 

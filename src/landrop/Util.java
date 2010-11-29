@@ -1,3 +1,4 @@
+package landrop;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -6,6 +7,9 @@ import java.text.DecimalFormat;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 
+/**
+ * Useful functions...
+ */
 public class Util
 {
 	private final static long SECOND = 1000;

@@ -1,3 +1,4 @@
+package landrop.ui;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -15,6 +16,12 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+
+
+import landrop.peering.MulticastManager;
+import landrop.peering.Peer;
+import landrop.peering.PeerEventListener;
+import landrop.transfer.OutgoingTransfer;
 
 /**
  * Shown when the user has dragged a file to send. Lets them pick who to send it to.

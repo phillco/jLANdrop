@@ -1,9 +1,13 @@
+package landrop.transfer;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+
+import landrop.Util;
+import landrop.ui.TransferForm;
 
 /**
  * Parent class of Incoming and OutgoingTransfer; used to share code among the two.
@@ -180,7 +184,7 @@ public abstract class Transfer extends Thread
 	/**
 	 * Call if any sort of error occurred. Marks the state and shuts down.
 	 */
-	protected void transferFailed( String error )
+	public void transferFailed( String error )
 	{
 		this.error = error;
 		setStage( Stage.FAILED );
