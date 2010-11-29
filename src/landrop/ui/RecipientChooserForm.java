@@ -2,6 +2,7 @@ package landrop.ui;
 
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -18,6 +19,7 @@ import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import landrop.Util;
 import landrop.peering.MulticastManager;
 import landrop.peering.Peer;
 import landrop.peering.PeerEventListener;
@@ -54,6 +56,7 @@ public class RecipientChooserForm extends JFrame
 		add( Box.createVerticalStrut( 15 ) );
 
 		listenForPeers();
+		setIconImage( Util.getApplicationIcon() );
 		setMinimumSize( new Dimension( 400, 60 ) );
 		setResizable( false );
 		setVisible( true );

@@ -13,6 +13,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 
+import landrop.Util;
 import landrop.transfer.Transfer;
 
 public class TransferForm extends JFrame
@@ -61,9 +62,10 @@ public class TransferForm extends JFrame
 		add( Box.createVerticalGlue() );
 
 		updateComponents();
-		setMinimumSize( new Dimension( 400, 60 ) );
-		pack();
+		setIconImage( Util.getApplicationIcon() );
+		setMinimumSize( new Dimension( 400, 60 ) );		
 		setResizable( false );
+		pack();
 
 		addWindowListener( new java.awt.event.WindowAdapter()
 		{

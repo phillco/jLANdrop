@@ -1,5 +1,7 @@
 package landrop;
 
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -7,6 +9,8 @@ import java.text.DecimalFormat;
 
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
+
+import landrop.ui.DropForm;
 
 /**
  * Useful functions...
@@ -24,6 +28,10 @@ public class Util
 
 	private final static long DAY = HOUR * HOURS_IN_DAY;
 
+	public static Image getApplicationIcon()
+	{
+		return Toolkit.getDefaultToolkit().getImage( DropForm.class.getResource( "airPlaneIcon.png" ) );
+	}
 	/**
 	 * Converts time (in milliseconds) to human-readable format
 	 * "<w> days, <x> hours, <y> minutes and (z) seconds"
