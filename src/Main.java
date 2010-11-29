@@ -1,6 +1,6 @@
 public class Main
 {
-	private static MainFrame mainFrame;
+	private static DropForm mainFrame;
 
 	private static Listener listener = new Listener();
 
@@ -14,11 +14,11 @@ public class Main
 		MulticastManager.startListenLoop();
 
 		// Create the main form; start listening for connections.
-		mainFrame = new MainFrame();
+		mainFrame = new DropForm();
 		listener.connect();
 	}
 
-	public static MainFrame getMainFrame()
+	public static DropForm getMainFrame()
 	{
 		return mainFrame;
 	}

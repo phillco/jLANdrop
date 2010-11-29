@@ -11,13 +11,16 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-public class MainFrame extends JFrame
+/**
+ * The main application form that lets the user drop files onto it. 
+ */
+public class DropForm extends JFrame
 {
 	private JLabel localIP;
 
 	private JPanel fileDropPanel;
 
-	public MainFrame()
+	public DropForm()
 	{
 		setLayout( new BoxLayout( getContentPane(), BoxLayout.Y_AXIS ) );
 
