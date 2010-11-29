@@ -95,7 +95,7 @@ public class DropForm extends JFrame
 		setTitle( "LANdrop" );
 		setDefaultCloseOperation( DISPOSE_ON_CLOSE );
 		setMinimumSize( new Dimension( 350, 175 ) );
-		setIconImage( Toolkit.getDefaultToolkit().getImage( DropForm.class.getResource( "airPlaneIcon.png" ) ) );
+		setIconImage( Util.getApplicationIcon() );
 		setResizable( false );
 		setVisible( true );
 		pack();

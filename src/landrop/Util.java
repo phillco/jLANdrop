@@ -30,7 +30,7 @@ public class Util
 
 	public static Image getApplicationIcon()
 	{
-		return Toolkit.getDefaultToolkit().getImage( DropForm.class.getResource( "airPlaneIcon.png" ) );
+		return Toolkit.getDefaultToolkit().getImage( DropForm.class.getResource( "airplaneIcon.png" ) );
 	}
 	/**
 	 * Converts time (in milliseconds) to human-readable format
