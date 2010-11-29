@@ -9,6 +9,10 @@ public class Main
 		// Use the native look and feel.
 		Util.useNativeLookAndFeel();
 
+		// Multicast peer announcing.
+		MulticastManager.startBroadcastLoop();
+		MulticastManager.startListenLoop();
+
 		// Create the main form; start listening for connections.
 		mainFrame = new MainFrame();
 		listener.connect();

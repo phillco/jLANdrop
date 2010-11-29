@@ -1,32 +1,21 @@
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.io.File;
-import java.util.Queue;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 
-public class MainFrame extends JFrame implements ActionListener
+public class MainFrame extends JFrame
 {
-	private JButton sendButton;
+	private JLabel localIP;
 
-	private JLabel receiveStatus, localIP;
-
-	private JList receiverList;
+	private JPanel fileDropPanel;
 
 	public MainFrame()
 	{
@@ -41,57 +30,36 @@ public class MainFrame extends JFrame implements ActionListener
 			JLabel titleLabel = new JLabel( "P2P File Transfer!" );
 			titleLabel.setForeground( Color.LIGHT_GRAY );
 			titleLabel.setFont( new Font( "Sans serif", Font.BOLD, 28 ) );
-			titlePanel.add( Box.createRigidArea( new Dimension( 1, 30 ) ) );
 			titlePanel.add( titleLabel );
 			titlePanel.setBackground( Color.gray );
 		}
 		add( titlePanel );
 
-		// ======================
-		// Add the receive label.
-		// ======================
-		sendButton = new JButton( "Send a file..." );
-		sendButton.setEnabled( false );
-		sendButton.addActionListener( this );
+		// ==================
+		// Add the file drop.
+		// ==================
 
-		JPanel receivePanel = new JPanel();
+		fileDropPanel = new JPanel();
 		{
-			// receivePanel.setLayout( new BoxLayout( receivePanel, BoxLayout.Y_AXIS ) );
-			receivePanel.add( Box.createHorizontalGlue() );
-			receivePanel.add( Box.createHorizontalStrut( 10 ) );
-			receiveStatus = new JLabel( "Server starting..." );
-			receiveStatus.setFont( receiveStatus.getFont().deriveFont( Font.BOLD ) );
-			receivePanel.add( receiveStatus );
+			JLabel dropLabel = new JLabel( "Drag files here to send..." );
+			dropLabel.setFont( dropLabel.getFont().deriveFont( Font.BOLD ) );
+			dropLabel.setForeground( new Color( 100, 100, 100 ) );
+			fileDropPanel.add( Box.createVerticalStrut( 70 ) );
+			fileDropPanel.add( dropLabel );
 
-			localIP = new JLabel( "" );
-			receivePanel.add( localIP );
-
-			// receivePanel.add( new JButton( "Copy" ) );
-			receivePanel.add( Box.createHorizontalStrut( 5 ) );
-			receivePanel.setPreferredSize( new Dimension( 450, 40 ) );
-			receivePanel.add( sendButton );
-			receivePanel.add( Box.createHorizontalStrut( 10 ) );
-			receivePanel.add( Box.createHorizontalGlue() );
-		}
-		add( Box.createVerticalStrut( 10 ) );
-		add( receivePanel );
-
-		JPanel receipientsPanel = new JPanel();
-		{
-			receiverList = new JList();
-			receiverList.addListSelectionListener( new ListSelectionListener()
+			fileDropPanel.setBackground( Color.lightGray );
+			fileDropPanel.setPreferredSize( new Dimension( 400, 80 ) );
+			new FileDrop( fileDropPanel, new FileDrop.Listener()
 			{
 				@Override
-				public void valueChanged( ListSelectionEvent arg0 )
+				public void filesDropped( java.io.File[] files )
 				{
-					sendButton.setEnabled( receiverList.getSelectedValue() != null );
+					onFilesDropped( files );
 				}
+
 			} );
-			JScrollPane scrollContainer = new JScrollPane( receiverList );
-			scrollContainer.setPreferredSize( new Dimension( 400, 75 ) );
-			receipientsPanel.add( scrollContainer );
 		}
-		add( receipientsPanel );
+		add( fileDropPanel );
 		add( Box.createVerticalStrut( 10 ) );
 
 		// ================
@@ -100,7 +68,13 @@ public class MainFrame extends JFrame implements ActionListener
 
 		JPanel footerPanel = new JPanel();
 		{
-			JLabel footerLabel = new JLabel( "Version 1.2 / created by Phillip Cohen" );
+			JLabel footerLabel = new JLabel( "v1.3 by Phillip Cohen" );
+
+			localIP = new JLabel( "" );
+			localIP.setForeground( Color.darkGray );
+			footerPanel.add( localIP );
+			footerPanel.add( Box.createHorizontalStrut( 2 ) );
+
 			footerLabel.setForeground( Color.gray );
 			footerPanel.add( footerLabel );
 		}
@@ -120,23 +94,27 @@ public class MainFrame extends JFrame implements ActionListener
 			@Override
 			public void windowClosing( WindowEvent winEvt )
 			{
-				// Perhaps ask user if they want to save any unsaved files first.
 				System.exit( 0 );
 			}
 		} );
+	}
 
-		MulticastManager.addPeerListener( new PeerEventListener()
+	/**
+	 * Called when something's dropped onto the file drop panel.
+	 */
+	private void onFilesDropped( File[] files )
+	{
+		File file = files[0]; // Todo: support multiple files
+
+		if ( file.isDirectory() )
+			return; // Todo: support directories
+		else if ( file.length() > Long.MAX_VALUE )
 		{
-			@Override
-			public void peerListUpdated( Queue<Peer> p )
-			{
-				Object selected = receiverList.getSelectedValue();
-				receiverList.setListData( p.toArray() );
-				receiverList.setSelectedValue( selected, true );
-			}
-		} );
-		MulticastManager.startBroadcastLoop();
-		MulticastManager.startListenLoop();
+			JOptionPane.showMessageDialog( this, "The file you selected is too big; the max file size that can be transferred is " + Util.formatFileSize( Long.MAX_VALUE ) + "." );
+			return;
+		}
+		else
+			new RecipientChooserForm( file );
 	}
 
 	public void updateLabels()
@@ -144,37 +122,9 @@ public class MainFrame extends JFrame implements ActionListener
 		if ( Main.getListener() != null )
 		{
 			localIP.setVisible( Main.getListener().isEnabled() );
-			if ( !Main.getListener().isEnabled() )
-				receiveStatus.setText( "Server starting..." );
-			else
-			{
-				receiveStatus.setText( "Ready to receive files!" );
-				localIP.setText( "Choose a user to send to: " );
-			}
+			if ( Main.getListener().isEnabled() )
+				localIP.setText( "Your IP is " + Main.getListener().getServerIP() );
 		}
 		invalidate();
-	}
-
-	@Override
-	public void actionPerformed( ActionEvent arg0 )
-	{
-		// "Send" button was pressed. Show a file selector dialog.
-		final JFileChooser fileChooser = new JFileChooser();
-
-		if ( fileChooser.showOpenDialog( this ) != JFileChooser.APPROVE_OPTION )
-			return;
-
-		// Read in the selected file.
-		File file = fileChooser.getSelectedFile();
-		if ( fileChooser.getSelectedFile().length() > Long.MAX_VALUE )
-		{
-			JOptionPane.showMessageDialog( this, "The file you selected is too big; the max file size that can be transferred is " + Util.formatFileSize( Long.MAX_VALUE ) + "." );
-			return;
-		}
-
-		if ( ( receiverList.getSelectedValue() == null ) || !( receiverList.getSelectedValue() instanceof Peer ) )
-			JOptionPane.showMessageDialog( this, "You didn't select a sender!" );
-		else
-			new OutgoingTransfer( file, (Peer) receiverList.getSelectedValue() );
 	}
 }

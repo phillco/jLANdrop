@@ -73,7 +73,6 @@ public class MulticastManager
 
 	private static void checkForTimeouts()
 	{
-
 		boolean listChanged = false;
 		Iterator<Peer> it = peers.iterator();
 		while ( it.hasNext() )
@@ -157,4 +156,8 @@ public class MulticastManager
 		new Thread( start ).start();
 	}
 
+	public static Queue<Peer> getPeers()
+	{
+		return peers;
+	}
 }

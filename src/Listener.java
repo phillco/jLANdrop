@@ -51,7 +51,7 @@ public class Listener
 				listeningSocket = null;
 			}
 		}
-		
+
 		if ( listeningSocket == null )
 		{
 			JOptionPane.showMessageDialog( null, "Could not listen on port: " + port + ".\nAnother server may already be running.", "Server error", JOptionPane.ERROR_MESSAGE );
