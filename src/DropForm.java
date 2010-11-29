@@ -30,9 +30,9 @@ public class DropForm extends JFrame
 
 		JPanel titlePanel = new JPanel();
 		{
-			JLabel titleLabel = new JLabel( "P2P File Transfer!" );
+			JLabel titleLabel = new JLabel( "LANdrop!" );
 			titleLabel.setForeground( Color.LIGHT_GRAY );
-			titleLabel.setFont( new Font( "Sans serif", Font.BOLD, 28 ) );
+			titleLabel.setFont( new Font( "Sans serif", Font.BOLD, 32 ) );
 			titlePanel.add( titleLabel );
 			titlePanel.setBackground( Color.gray );
 		}
@@ -85,7 +85,7 @@ public class DropForm extends JFrame
 
 		// Other attributes...
 		updateLabels();
-		setTitle( "P2P File Transfer!" );
+		setTitle( "Welcome to LANdrop!" );
 		setDefaultCloseOperation( DISPOSE_ON_CLOSE );
 		setMinimumSize( new Dimension( 350, 175 ) );
 		pack();
