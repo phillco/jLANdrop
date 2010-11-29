@@ -38,12 +38,21 @@ public class Listener
 	public void connect()
 	{
 		// Start listening for connections.
-		try
+		for ( int i = DEFAULT_PORT; i < DEFAULT_PORT + 50; i++ )
 		{
-			port = DEFAULT_PORT;
-			listeningSocket = new ServerSocket( port );
+			try
+			{
+				port = i;
+				listeningSocket = new ServerSocket( i );
+				break;
+			}
+			catch ( final IOException e )
+			{
+				listeningSocket = null;
+			}
 		}
-		catch ( final IOException e )
+		
+		if ( listeningSocket == null )
 		{
 			JOptionPane.showMessageDialog( null, "Could not listen on port: " + port + ".\nAnother server may already be running.", "Server error", JOptionPane.ERROR_MESSAGE );
 			System.exit( 0 );
