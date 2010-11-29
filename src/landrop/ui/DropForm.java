@@ -3,6 +3,7 @@ package landrop.ui;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Toolkit;
 import java.awt.event.WindowEvent;
 import java.io.File;
 
@@ -90,12 +91,13 @@ public class DropForm extends JFrame
 
 		// Other attributes...
 		updateLabels();
-		setTitle( "Welcome to LANdrop!" );
+		setTitle( "LANdrop" );
 		setDefaultCloseOperation( DISPOSE_ON_CLOSE );
 		setMinimumSize( new Dimension( 350, 175 ) );
-		pack();
+		setIconImage( Toolkit.getDefaultToolkit().getImage( DropForm.class.getResource( "paper_plane_arrow.png" ) ) );
 		setResizable( false );
 		setVisible( true );
+		pack();
 
 		addWindowListener( new java.awt.event.WindowAdapter()
 		{
