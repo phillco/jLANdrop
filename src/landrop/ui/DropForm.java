@@ -9,6 +9,7 @@ import java.io.File;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -36,11 +37,11 @@ public class DropForm extends JFrame
 
 		JPanel titlePanel = new JPanel();
 		{
-			JLabel titleLabel = new JLabel( "LANdrop!" );
-			titleLabel.setForeground( Color.LIGHT_GRAY );
-			titleLabel.setFont( new Font( "Sans serif", Font.BOLD, 32 ) );
+			titlePanel.setLayout( new BoxLayout( titlePanel, BoxLayout.X_AXIS ) );
+			JLabel titleLabel = new JLabel( new ImageIcon( DropForm.class.getResource( "logo.png" ) ) );
 			titlePanel.add( titleLabel );
-			titlePanel.setBackground( Color.gray );
+			titlePanel.setPreferredSize( new Dimension(350,72) );
+			titlePanel.setBackground( new Color( 86, 102, 137 ) );			
 		}
 		add( titlePanel );
 
@@ -57,7 +58,7 @@ public class DropForm extends JFrame
 			fileDropPanel.add( dropLabel );
 
 			fileDropPanel.setBackground( Color.lightGray );
-			fileDropPanel.setPreferredSize( new Dimension( 400, 80 ) );
+			fileDropPanel.setPreferredSize( new Dimension( 350, 80 ) );
 			new FileDrop( fileDropPanel, new FileDrop.Listener()
 			{
 				@Override
