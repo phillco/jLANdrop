@@ -1,4 +1,5 @@
 package landrop.transfer;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -11,7 +12,6 @@ import javax.swing.JOptionPane;
 
 import landrop.Util;
 import landrop.peering.Peer;
-
 
 public class OutgoingTransfer extends Transfer
 {

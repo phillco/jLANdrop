@@ -1,4 +1,5 @@
 package landrop.peering;
+
 import java.util.Queue;
 
 public interface PeerEventListener
