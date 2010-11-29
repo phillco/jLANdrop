@@ -78,7 +78,7 @@ public class DropForm extends JFrame
 
 		JPanel footerPanel = new JPanel();
 		{
-			JLabel footerLabel = new JLabel( "v1.3 by Phillip Cohen" );
+			JLabel footerLabel = new JLabel( "v1.4 by Phillip Cohen" );
 
 			localIP = new JLabel( "" );
 			localIP.setForeground( Color.darkGray );
