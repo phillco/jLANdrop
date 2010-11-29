@@ -90,10 +90,7 @@ public class IncomingTransfer extends Transfer
 
 		// Make a JFileChooser to ask for the save location.
 		JFileChooser fileChooser = new JFileChooser();
-
-		// Append "-new" to the filename, so we don't ever override the originals by mistake.
-		String newDefaultFilename = fileName.substring( 0, fileName.length() - 4 ) + "-new" + fileName.substring( fileName.length() - 4 );
-		fileChooser.setSelectedFile( new File( newDefaultFilename ) );
+		fileChooser.setSelectedFile( new File( fileName ) );
 
 		// Show the dialog.
 		if ( fileChooser.showSaveDialog( null ) == JFileChooser.APPROVE_OPTION )
