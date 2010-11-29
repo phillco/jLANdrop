@@ -19,8 +19,6 @@ public class IncomingTransfer extends Transfer
 
 	private FileOutputStream fileOut;
 
-	private String sender;
-
 	/**
 	 * Receives the transfer from the given socket.
 	 */
@@ -73,7 +71,6 @@ public class IncomingTransfer extends Transfer
 	 */
 	private void startTransfer() throws IOException
 	{
-		sender = dataIn.readUTF();
 		fileName = dataIn.readUTF();
 		fileSize = dataIn.readLong();
 
@@ -88,7 +85,7 @@ public class IncomingTransfer extends Transfer
 	private boolean getConfirmation() throws FileNotFoundException
 	{
 		// Asks the user if they want to accept the transfer.
-		if ( JOptionPane.showConfirmDialog( null, "Would you like to receive \"" + fileName + "\" (" + Util.formatFileSize( fileSize ) + ") from " + sender + "?", "Incoming transfer", JOptionPane.YES_NO_OPTION ) != JOptionPane.YES_OPTION )
+		if ( JOptionPane.showConfirmDialog( null, "Would you like to receive \"" + fileName + "\" (" + Util.formatFileSize( fileSize ) + ") from " + socket.getInetAddress().toString().substring( 1 ) + "?", "Incoming transfer", JOptionPane.YES_NO_OPTION ) != JOptionPane.YES_OPTION )
 			return false;
 
 		// Make a JFileChooser to ask for the save location.

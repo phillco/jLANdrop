@@ -89,7 +89,6 @@ public class OutgoingTransfer extends Transfer
 		form.setVisible( true );
 
 		// Send the user the file's attributes.
-		dataOut.writeUTF( ( System.getProperty( "user.name" ) + " on " + java.net.InetAddress.getLocalHost().getHostName() ) );
 		dataOut.writeUTF( file.getName() );
 		dataOut.writeLong( fileSize );
 		dataOut.flush();
