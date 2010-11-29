@@ -3,6 +3,7 @@ package landrop;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.math.BigInteger;
+import java.net.InetAddress;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
@@ -32,6 +33,7 @@ public class Util
 	{
 		return Toolkit.getDefaultToolkit().getImage( DropForm.class.getResource( "airplaneIcon.png" ) );
 	}
+	
 	/**
 	 * Converts time (in milliseconds) to human-readable format
 	 * "<w> days, <x> hours, <y> minutes and (z) seconds"

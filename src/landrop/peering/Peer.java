@@ -1,13 +1,16 @@
 package landrop.peering;
 
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Date;
+
+import javax.swing.JOptionPane;
 
 public class Peer
 {
 	InetAddress address;
 	int port = 50900; // TODO: allow peers to specify their port number
-	String name;
+	String name = "Peer";
 	Date lastSeen;
 
 	public Peer( InetAddress address, String name )
@@ -16,6 +19,26 @@ public class Peer
 		this.address = address;
 		this.name = name;
 		lastSeen = new Date();
+	}
+
+	public Peer( String input ) throws UnknownHostException
+	{
+		try
+		{
+			if ( input.split( ":" ).length == 2 )
+			{
+				port = Integer.parseInt( input.split( ":" )[1] );
+				this.address = InetAddress.getByName( input.split( ":" )[0] );
+			}
+			else
+				this.address = InetAddress.getByName( input );
+		}
+		catch ( NumberFormatException ex )
+		{
+			JOptionPane.showMessageDialog( null, "Error parsing that port.", "Input error", JOptionPane.ERROR_MESSAGE );
+			throw ex;
+		}
+
 	}
 
 	@Override

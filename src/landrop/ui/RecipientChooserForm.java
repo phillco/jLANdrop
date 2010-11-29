@@ -6,6 +6,8 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Queue;
 
 import javax.swing.Box;
@@ -14,6 +16,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
@@ -23,6 +26,7 @@ import landrop.Util;
 import landrop.peering.MulticastManager;
 import landrop.peering.Peer;
 import landrop.peering.PeerEventListener;
+import landrop.transfer.Listener;
 import landrop.transfer.OutgoingTransfer;
 
 /**
@@ -118,9 +122,28 @@ public class RecipientChooserForm extends JFrame
 		JPanel buttonsPanel = new JPanel();
 		{
 			// Add the "add IP" button.
-			addAddressButton = new JButton( "Add Computer..." );
-			addAddressButton.setPreferredSize( new Dimension( 120, 25 ) );
-			addAddressButton.setEnabled( false );
+			addAddressButton = new JButton( "Not listed..." );
+			addAddressButton.setPreferredSize( new Dimension( 125, 25 ) );
+			addAddressButton.addActionListener( new ActionListener()
+			{
+				@Override
+				public void actionPerformed( ActionEvent e )
+				{
+					// Read the connection address manually.
+					String input = JOptionPane.showInputDialog( "Enter the address and port of your recipient.", "127.0.0.1:" + Listener.DEFAULT_PORT );
+					if ( ( input == null ) || ( input.length() < 1 ) )
+						return;
+
+					try
+					{
+						startTransfer( new Peer( input ) );
+					}
+					catch ( UnknownHostException e1 )
+					{
+						JOptionPane.showMessageDialog( null, "Could not find that host (" + input + ").", "Input error", JOptionPane.ERROR_MESSAGE );
+					}
+				}
+			} );
 			buttonsPanel.add( addAddressButton );
 
 			buttonsPanel.add( Box.createHorizontalStrut( 30 ) );
