@@ -210,7 +210,6 @@ public class FileDrop
 		{ // Make a drop listener
 			dropListener = new java.awt.dnd.DropTargetListener()
 			{
-				@Override
 				public void dragEnter( java.awt.dnd.DropTargetDragEvent evt )
 				{
 					log( out, "FileDrop: dragEnter event." );
@@ -240,13 +239,11 @@ public class FileDrop
 					} // end else: drag not ok
 				} // end dragEnter
 
-				@Override
 				public void dragOver( java.awt.dnd.DropTargetDragEvent evt )
 				{ // This is called continually as long as the mouse is
 					// over the drag target.
 				} // end dragOver
 
-				@Override
 				public void drop( java.awt.dnd.DropTargetDropEvent evt )
 				{
 					log( out, "FileDrop: drop event." );
@@ -341,7 +338,6 @@ public class FileDrop
 					} // end finally
 				} // end drop
 
-				@Override
 				public void dragExit( java.awt.dnd.DropTargetEvent evt )
 				{
 					log( out, "FileDrop: dragExit event." );
@@ -354,7 +350,6 @@ public class FileDrop
 					} // end if: JComponent
 				} // end dragExit
 
-				@Override
 				public void dropActionChanged( java.awt.dnd.DropTargetDragEvent evt )
 				{
 					log( out, "FileDrop: dropActionChanged event." );
@@ -454,7 +449,7 @@ public class FileDrop
 		// Listen for hierarchy changes and remove the drop target when the parent gets cleared out.
 		c.addHierarchyListener( new java.awt.event.HierarchyListener()
 		{
-			@Override
+
 			public void hierarchyChanged( java.awt.event.HierarchyEvent evt )
 			{
 				log( out, "FileDrop: Hierarchy changed." );
@@ -790,7 +785,7 @@ public class FileDrop
 		 * @return An array of supported data flavors
 		 * @since 1.1
 		 */
-		@Override
+		
 		public java.awt.datatransfer.DataFlavor[] getTransferDataFlavors()
 		{
 			if ( customFlavor != null )
@@ -809,7 +804,7 @@ public class FileDrop
 		 * @return The dropped data
 		 * @since 1.1
 		 */
-		@Override
+		
 		public Object getTransferData( java.awt.datatransfer.DataFlavor flavor ) throws java.awt.datatransfer.UnsupportedFlavorException, java.io.IOException
 		{
 			// Native object
@@ -832,7 +827,7 @@ public class FileDrop
 		 * @return Whether or not the flavor is supported
 		 * @since 1.1
 		 */
-		@Override
+		
 		public boolean isDataFlavorSupported( java.awt.datatransfer.DataFlavor flavor )
 		{
 			// Native object

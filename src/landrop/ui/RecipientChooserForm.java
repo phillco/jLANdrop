@@ -178,7 +178,6 @@ public class RecipientChooserForm extends JFrame
 
 		MulticastManager.addPeerListener( new PeerEventListener()
 		{
-			@Override
 			public void peerListUpdated( Queue<Peer> p )
 			{
 				Object selected = receiverList.getSelectedValue();
