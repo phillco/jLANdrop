@@ -36,6 +36,8 @@ public class RecipientChooserForm extends JFrame
 {
 	private File file;
 
+    private static String lastEnteredIp = ( "127.0.0.1:" + Listener.DEFAULT_PORT );
+
 	private JButton sendButton, addAddressButton;
 
 	private JLabel statusLabel, detailLabel1;
@@ -97,7 +99,6 @@ public class RecipientChooserForm extends JFrame
 			receiverList = new JList();
 			receiverList.addListSelectionListener( new ListSelectionListener()
 			{
-				@Override
 				public void valueChanged( ListSelectionEvent arg0 )
 				{
 					// Enable the button now that a user is selected.
@@ -126,16 +127,16 @@ public class RecipientChooserForm extends JFrame
 			addAddressButton.setPreferredSize( new Dimension( 125, 25 ) );
 			addAddressButton.addActionListener( new ActionListener()
 			{
-				@Override
 				public void actionPerformed( ActionEvent e )
 				{
 					// Read the connection address manually.
-					String input = JOptionPane.showInputDialog( "Enter the address and port of your recipient.", "127.0.0.1:" + Listener.DEFAULT_PORT );
+					String input = JOptionPane.showInputDialog( "Enter the address and port of your recipient.", lastEnteredIp );
 					if ( ( input == null ) || ( input.length() < 1 ) )
 						return;
 
 					try
 					{
+                        lastEnteredIp = input;
 						startTransfer( new Peer( input ) );
 					}
 					catch ( UnknownHostException e1 )
@@ -155,7 +156,6 @@ public class RecipientChooserForm extends JFrame
 			sendButton.setFont( sendButton.getFont().deriveFont( Font.BOLD ) );
 			sendButton.addActionListener( new ActionListener()
 			{
-				@Override
 				public void actionPerformed( ActionEvent arg0 )
 				{
 					if ( ( receiverList.getSelectedValue() != null ) && ( receiverList.getSelectedValue() instanceof Peer ) )

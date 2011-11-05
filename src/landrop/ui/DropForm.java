@@ -61,7 +61,6 @@ public class DropForm extends JFrame
 			fileDropPanel.setPreferredSize( new Dimension( 350, 80 ) );
 			new FileDrop( fileDropPanel, new FileDrop.Listener()
 			{
-				@Override
 				public void filesDropped( java.io.File[] files )
 				{
 					onFilesDropped( files );
