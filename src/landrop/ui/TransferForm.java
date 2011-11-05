@@ -86,8 +86,6 @@ public class TransferForm extends JFrame
 
 	public void updateComponents()
 	{
-        System.out.println(transfer.getStage());
-
         if ( transfer.getStage() == Transfer.Stage.REJECTED )
         {
             statusLabel.setText( "Your transfer was rejected!" );

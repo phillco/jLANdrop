@@ -8,8 +8,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
+import javax.swing.*;
 
 import landrop.Util;
 
@@ -85,22 +84,34 @@ public class IncomingTransfer extends Transfer
 	private boolean getConfirmation() throws FileNotFoundException
 	{
 		// Asks the user if they want to accept the transfer.
-		if ( JOptionPane.showConfirmDialog( null, "Would you like to receive \"" + fileName + "\" (" + Util.formatFileSize( fileSize ) + ") from " + socket.getInetAddress().toString().substring( 1 ) + "?", "Incoming transfer", JOptionPane.YES_NO_OPTION ) != JOptionPane.YES_OPTION )
-			return false;
+        JCheckBox checkbox = new JCheckBox("Select where to save the file.");
+        String message = "Would you like to receive \"" + fileName + "\" (" + Util.formatFileSize( fileSize ) + ") from " + socket.getInetAddress().toString().substring( 1 ) + "?";
+        Object[] params = {message, checkbox};
+        if ( JOptionPane.showConfirmDialog(null, params, "Incoming transfer", JOptionPane.YES_NO_OPTION)  != JOptionPane.YES_OPTION )
+            return false;
 
-		// Make a JFileChooser to ask for the save location.
-		JFileChooser fileChooser = new JFileChooser();
-		fileChooser.setSelectedFile( new File( fileName ) );
+        // User wants to choose where to put the file.
+        if( checkbox.isSelected() )
+        {
+            // Make a JFileChooser to ask for the save location.
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setSelectedFile( new File( fileName ) );
 
-		// Show the dialog.
-		if ( fileChooser.showSaveDialog( null ) == JFileChooser.APPROVE_OPTION )
-		{
-			// Good! Create the output stream.
-			fileOut = new FileOutputStream( fileChooser.getSelectedFile() );
-			return true;
-		}
-		else
-			return false;
+            // Show the dialog.
+            if ( fileChooser.showSaveDialog( null ) == JFileChooser.APPROVE_OPTION )
+            {
+                // Good! Create the output stream.
+                fileOut = new FileOutputStream( fileChooser.getSelectedFile() );
+                return true;
+            }
+            else
+                return false;
+        }
+        else
+        {
+            fileOut = new FileOutputStream( fileName );
+            return true;
+        }
 	}
 
 	/**
