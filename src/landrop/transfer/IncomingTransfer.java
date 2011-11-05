@@ -1,5 +1,6 @@
 package landrop.transfer;
 
+import java.awt.*;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -84,9 +85,10 @@ public class IncomingTransfer extends Transfer
 	private boolean getConfirmation() throws FileNotFoundException
 	{
 		// Asks the user if they want to accept the transfer.
-        JCheckBox checkbox = new JCheckBox("Select where to save the file.");
-        String message = "Would you like to receive \"" + fileName + "\" (" + Util.formatFileSize( fileSize ) + ") from " + socket.getInetAddress().toString().substring( 1 ) + "?";
-        Object[] params = {message, checkbox};
+        JLabel header = new JLabel("Would you like to receive \"" + "ttt" + "\" (" + Util.formatFileSize( 895652456 ) + ") from " + "god" + "?");
+        header.setFont(header.getFont().deriveFont(Font.BOLD));
+        JCheckBox checkbox = new JCheckBox("Select a storage location other than \"" + new File(new File("").getAbsolutePath()).getName() + "\".");
+        Object[] params = {header, checkbox};
         if ( JOptionPane.showConfirmDialog(null, params, "Incoming transfer", JOptionPane.YES_NO_OPTION)  != JOptionPane.YES_OPTION )
             return false;
 
