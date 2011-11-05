@@ -86,7 +86,15 @@ public class TransferForm extends JFrame
 
 	public void updateComponents()
 	{
-		if ( ( transfer.getStage() != Transfer.Stage.TRANSFERRING ) || ( System.currentTimeMillis() - lastUpdateTime > 100 ) )
+        System.out.println(transfer.getStage());
+
+        if ( transfer.getStage() == Transfer.Stage.REJECTED )
+        {
+            statusLabel.setText( "Your transfer was rejected!" );
+			detailLabel1.setText( "Ouch. We recommend chocolate." );
+            progressBar.setVisible( false );
+        }
+		else if ( ( transfer.getStage() != Transfer.Stage.TRANSFERRING ) || ( System.currentTimeMillis() - lastUpdateTime > 100 ) )
 		{
 			setTitle( transfer.getName() );
 			progressBar.setValue( transfer.getProgress() );

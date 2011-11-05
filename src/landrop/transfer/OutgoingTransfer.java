@@ -161,6 +161,8 @@ public class OutgoingTransfer extends Transfer
 		{
 			case WAITING:
 				return "Waiting for receiver...";
+            case REJECTED:
+                return "Your transfer was rejected";
 			case TRANSFERRING:
 				return "Sending... (" + getProgress() + "%)";
 			case VERIFYING:
