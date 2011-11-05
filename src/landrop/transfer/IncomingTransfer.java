@@ -90,29 +90,32 @@ public class IncomingTransfer extends Transfer
         if ( JOptionPane.showConfirmDialog(null, params, "Incoming transfer", JOptionPane.YES_NO_OPTION)  != JOptionPane.YES_OPTION )
             return false;
 
-        // User wants to choose where to put the file.
+        // Decide where to put the file.
+        String storagePath = fileName;
         if( checkbox.isSelected() )
-        {
-            // Make a JFileChooser to ask for the save location.
-            JFileChooser fileChooser = new JFileChooser();
-            fileChooser.setSelectedFile( new File( fileName ) );
+            storagePath = askWhereToSaveFile( fileName );
 
-            // Show the dialog.
-            if ( fileChooser.showSaveDialog( null ) == JFileChooser.APPROVE_OPTION )
-            {
-                // Good! Create the output stream.
-                fileOut = new FileOutputStream( fileChooser.getSelectedFile() );
-                return true;
-            }
-            else
-                return false;
-        }
-        else
+        if ( storagePath != null )
         {
-            fileOut = new FileOutputStream( fileName );
+            fileOut = new FileOutputStream( storagePath );
             return true;
         }
+        else
+            return false;
 	}
+
+    private String askWhereToSaveFile(String defaultName)
+    {
+        // Make a JFileChooser to ask for the save location.
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setSelectedFile( new File( defaultName ) );
+
+        // Show the dialog.
+        if ( fileChooser.showSaveDialog( null ) == JFileChooser.APPROVE_OPTION )
+            return fileChooser.getSelectedFile().getAbsolutePath();
+        else
+            return null;
+    }
 
 	/**
 	 * Receives the file's data, chunk-by-chunk.
