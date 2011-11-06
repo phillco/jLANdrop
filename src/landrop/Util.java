@@ -2,6 +2,7 @@ package landrop;
 
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.io.File;
 import java.math.BigInteger;
 import java.net.InetAddress;
 import java.security.MessageDigest;
@@ -144,5 +145,21 @@ public class Util
 		{
 		}
 	}
+
+    public static String combinePaths( String path1, String path2 )
+    {
+        File file1 = new File(path1);
+
+        if (new File(path2).isAbsolute())
+            return path2;
+
+        File file2 = new File(file1, path2);
+        return file2.getPath();
+    }
+
+
+    public static String getParentDirectory(String path) {
+        return new File(path).getParent();
+    }
 
 }

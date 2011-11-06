@@ -8,14 +8,14 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-
 import javax.swing.*;
-
 import landrop.Util;
 
 public class IncomingTransfer extends Transfer
 {
 	private String fileName;
+
+    private static String lastPathUsed = new File("").getAbsolutePath();
 
 	private FileOutputStream fileOut;
 
@@ -87,13 +87,13 @@ public class IncomingTransfer extends Transfer
 		// Asks the user if they want to accept the transfer.
         JLabel header = new JLabel("Would you like to receive \"" + "ttt" + "\" (" + Util.formatFileSize( 895652456 ) + ") from " + "god" + "?");
         header.setFont(header.getFont().deriveFont(Font.BOLD));
-        JCheckBox checkbox = new JCheckBox("Select a storage location other than \"" + new File(new File("").getAbsolutePath()).getName() + "\".");
+        JCheckBox checkbox = new JCheckBox("Select a storage location other than \"" + new File(lastPathUsed).getName() + "\".");
         Object[] params = {header, checkbox};
         if ( JOptionPane.showConfirmDialog(null, params, "Incoming transfer", JOptionPane.YES_NO_OPTION)  != JOptionPane.YES_OPTION )
             return false;
 
         // Decide where to put the file.
-        String storagePath = fileName;
+        String storagePath = Util.combinePaths(lastPathUsed, fileName);
         if( checkbox.isSelected() )
             storagePath = askWhereToSaveFile( fileName );
 
@@ -114,7 +114,11 @@ public class IncomingTransfer extends Transfer
 
         // Show the dialog.
         if ( fileChooser.showSaveDialog( null ) == JFileChooser.APPROVE_OPTION )
+        {
+            lastPathUsed = Util.getParentDirectory(fileChooser.getSelectedFile().getAbsolutePath());
+            System.out.println(lastPathUsed);
             return fileChooser.getSelectedFile().getAbsolutePath();
+        }
         else
             return null;
     }
