@@ -85,7 +85,7 @@ public class IncomingTransfer extends Transfer
 	private boolean getConfirmation() throws FileNotFoundException
 	{
 		// Asks the user if they want to accept the transfer.
-        JLabel header = new JLabel("Would you like to receive \"" + "ttt" + "\" (" + Util.formatFileSize( 895652456 ) + ") from " + "god" + "?");
+        JLabel header = new JLabel("Would you like to receive \"" + fileName + "\" (" + Util.formatFileSize( fileSize ) + ") from " + socket.getInetAddress().toString().substring( 1 ) + "?");
         header.setFont(header.getFont().deriveFont(Font.BOLD));
         JCheckBox checkbox = new JCheckBox("Select a storage location other than \"" + new File(lastPathUsed).getName() + "\".");
         Object[] params = {header, checkbox};
